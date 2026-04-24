@@ -4,7 +4,11 @@ import { engine } from './ChiptuneEngine';
 import { sequencer } from './Sequencer';
 import { BUGHUNT_TRACK_IDS, TRACKS, TYPERACE_TRACK_IDS, pickRandom } from './tracks';
 import {
+  sfxBugCrawl,
+  sfxBugScatter,
+  sfxBugSquash,
   sfxCorrect,
+  sfxRustle,
   sfxStreak5,
   sfxStreak15,
   sfxTreeGrow,
@@ -27,9 +31,11 @@ export function useAudio(): void {
   const flashKey = useGameStore((s) => s.flashKey);
   const flashType = useGameStore((s) => s.flashType);
   const streak = useGameStore((s) => s.streak);
+  const difficulty = useGameStore((s) => s.difficulty);
 
   const unlockedRef = useRef(false);
   const lastFlashRef = useRef<number | null>(null);
+  const lastFlashTypeRef = useRef<'correct' | 'wrong' | null>(null);
   const lastStreakRef = useRef(streak);
   const currentTrackRef = useRef<string | null>(null);
   const typeRaceTrackRef = useRef<string | null>(null);
@@ -102,17 +108,25 @@ export function useAudio(): void {
     if (!sfx || !unlockedRef.current) return;
     if (flashKey === null || flashKey === lastFlashRef.current) return;
     lastFlashRef.current = flashKey;
-
-    // Temporarily apply sfx volume scale
-    const prev = engine.audioContext ? null : null;
-    void prev;
+    const previousFlash = lastFlashTypeRef.current;
+    lastFlashTypeRef.current = flashType;
 
     if (flashType === 'correct') {
       sfxCorrect();
+      // Bugs scattering off the code panel, layered a beat after the arp
+      window.setTimeout(() => sfxBugScatter(), 80);
+      // If there was a stuck bug from the previous wrong answer, squash it
+      if (previousFlash === 'wrong') {
+        window.setTimeout(() => sfxBugSquash(), 180);
+      }
     } else if (flashType === 'wrong') {
       sfxWrong();
+      // Rustling leaves — intensity matches the visual leaf-fall count
+      sfxRustle(difficulty === 'easy' ? 'light' : difficulty === 'medium' ? 'medium' : 'heavy');
+      // A bug skitters up onto the trunk ~500ms later as the leaves settle
+      window.setTimeout(() => sfxBugCrawl(), 500);
     }
-  }, [flashKey, flashType, sfx, sfxVolume]);
+  }, [flashKey, flashType, sfx, sfxVolume, difficulty]);
 
   // Streak milestone chimes
   useEffect(() => {

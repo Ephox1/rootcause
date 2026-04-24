@@ -82,3 +82,92 @@ export function sfxTreeBreak(): void {
   engine.scheduleNote('pulse2', 'A3', t, 0.25);
   engine.scheduleNote('triangle', 'A2', t, 0.3);
 }
+
+// ──────────────────────────────────────────────────────────────────────
+// Ambient creature / foliage SFX — all noise-channel based, since filtered
+// white noise is how NES-era games made wind, rustling, and insect sounds.
+// ──────────────────────────────────────────────────────────────────────
+
+function randPick<T>(xs: readonly T[]): T {
+  return xs[Math.floor(Math.random() * xs.length)];
+}
+
+/**
+ * Rustling leaves / bush shake. A burst of high-pitched filtered noise with
+ * randomized pitch and timing to give it organic "shhhhh" texture. Fired
+ * on wrong-answer leaf fall. Intensity param scales length + density.
+ */
+export function sfxRustle(intensity: 'light' | 'medium' | 'heavy' = 'medium'): void {
+  const now = engine.now();
+  const count = intensity === 'light' ? 8 : intensity === 'medium' ? 16 : 28;
+  const pitches = ['D6', 'E6', 'F6', 'G6', 'A6', 'B6'];
+  for (let i = 0; i < count; i++) {
+    const t = now + i * 0.028 + Math.random() * 0.02;
+    const note = randPick(pitches);
+    const dur = 0.04 + Math.random() * 0.04;
+    engine.scheduleNote('noise', note, t, dur);
+  }
+  // A low whoosh undertone — like wind through branches
+  engine.playBlip({
+    channel: 'noise',
+    notes: [],
+    pitchSlide: { from: 'G4', to: 'C3', duration: count * 0.03 },
+    volume: 0.09,
+  });
+}
+
+/**
+ * Bugs scattering — 3–6 rapid chirps at scattered pitches, like insects
+ * fleeing in different directions. Fires on correct answer to match the
+ * visual bug-scatter particle effect.
+ */
+export function sfxBugScatter(): void {
+  const now = engine.now();
+  const count = 4 + Math.floor(Math.random() * 3);
+  const pitches = ['F6', 'G6', 'A6', 'B6', 'C7', 'D7'];
+  for (let i = 0; i < count; i++) {
+    const t = now + i * 0.045 + Math.random() * 0.03;
+    const note = randPick(pitches);
+    // Each beetle: a tiny pulse chirp + noise click for the "skitter"
+    engine.scheduleNote('pulse1', note, t, 0.035);
+    engine.scheduleNote('noise', 'C6', t, 0.02);
+  }
+}
+
+/**
+ * A single bug skittering — tiny rhythmic noise clicks, like six tiny feet
+ * tapping on bark. Fires when a bug lands on the tree after a wrong answer.
+ */
+export function sfxBugCrawl(): void {
+  const now = engine.now();
+  // 6 pairs of alternating ticks, slightly irregular for organic feel
+  for (let i = 0; i < 6; i++) {
+    const t = now + i * 0.09 + (Math.random() - 0.5) * 0.01;
+    engine.scheduleNote('noise', 'E6', t, 0.018);
+    engine.scheduleNote('noise', 'D6', t + 0.035, 0.018);
+  }
+}
+
+/**
+ * Bug squash — a short low crunch. Plays when the stuck bug on the tree is
+ * cleared by the next correct answer. Subtle, low-volume.
+ */
+export function sfxBugSquash(): void {
+  const t = engine.now();
+  engine.scheduleNote('noise', 'C3', t, 0.09);
+  engine.scheduleNote('pulse2', 'A3', t + 0.01, 0.07);
+  engine.scheduleNote('triangle', 'A2', t, 0.12);
+}
+
+/**
+ * A single falling leaf — very soft, short high-pitched rustle. Could be
+ * used to accent individual leaves drifting in ambient moments.
+ */
+export function sfxLeafDrift(): void {
+  engine.playBlip({
+    channel: 'noise',
+    notes: [],
+    pitchSlide: { from: 'A6', to: 'D5', duration: 0.4 },
+    volume: 0.06,
+  });
+}
