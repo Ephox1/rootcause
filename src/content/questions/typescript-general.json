@@ -1,0 +1,53 @@
+[
+  {
+    "id": "ts-gen-001",
+    "language": "typescript",
+    "category": "general",
+    "difficulty": "easy",
+    "prompt": "Why does TypeScript flag this?",
+    "code": "function greet(name: string) {\n  return 'Hello, ' + name;\n}\n\ngreet();",
+    "choices": [
+      { "id": "a", "text": "Expected 1 argument, but got 0" },
+      { "id": "b", "text": "name must be readonly" },
+      { "id": "c", "text": "return type must be declared" },
+      { "id": "d", "text": "string literals need backticks" }
+    ],
+    "correctChoiceId": "a",
+    "explanation": "`name` is a required parameter. Either make it optional (`name?: string`), give it a default (`name: string = 'world'`), or pass an argument at the call site.",
+    "tags": ["parameters"]
+  },
+  {
+    "id": "ts-gen-002",
+    "language": "typescript",
+    "category": "general",
+    "difficulty": "medium",
+    "prompt": "What's the subtle bug?",
+    "code": "type Status = 'ok' | 'error';\n\nfunction describe(s: Status): string {\n  switch (s) {\n    case 'ok': return 'all good';\n  }\n}",
+    "choices": [
+      { "id": "a", "text": "Missing 'error' case — function can return undefined" },
+      { "id": "b", "text": "switch can't match string literals" },
+      { "id": "c", "text": "Status should be an enum" },
+      { "id": "d", "text": "return type cannot be string" }
+    ],
+    "correctChoiceId": "a",
+    "explanation": "With `noImplicitReturns` (or strict), TS flags the missing branch. Handle `'error'` or add `default` with an exhaustiveness check (`_never: never = s`).",
+    "tags": ["exhaustiveness", "union-types"]
+  },
+  {
+    "id": "ts-gen-003",
+    "language": "typescript",
+    "category": "general",
+    "difficulty": "medium",
+    "prompt": "What breaks at runtime?",
+    "code": "interface User { id: string; name: string }\nconst raw = JSON.parse(localStorage.getItem('u')!);\nconst user: User = raw;",
+    "choices": [
+      { "id": "a", "text": "Type assertion doesn't validate — raw might not match User at runtime" },
+      { "id": "b", "text": "JSON.parse returns a string" },
+      { "id": "c", "text": "localStorage is not available" },
+      { "id": "d", "text": "! is disallowed in strict mode" }
+    ],
+    "correctChoiceId": "a",
+    "explanation": "TypeScript types are erased at runtime. Trusting external JSON without validation can put any shape into `user`. Validate with Zod or a similar schema library.",
+    "tags": ["runtime-validation", "type-assertion"]
+  }
+]

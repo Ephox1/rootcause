@@ -1,0 +1,138 @@
+[
+  {
+    "id": "js-gen-001",
+    "language": "javascript",
+    "category": "general",
+    "difficulty": "easy",
+    "prompt": "What's the bug in this code?",
+    "code": "const items = ['a', 'b', 'c'];\nfor (var i = 0; i < items.length; i++) {\n  setTimeout(() => console.log(items[i]), 100);\n}",
+    "choices": [
+      { "id": "a", "text": "setTimeout needs a string callback" },
+      { "id": "b", "text": "var creates a single shared i — all callbacks log 'undefined'" },
+      { "id": "c", "text": "items.length is off by one" },
+      { "id": "d", "text": "console.log is not defined in timers" }
+    ],
+    "correctChoiceId": "b",
+    "explanation": "`var` is function-scoped, so every scheduled callback closes over the same `i`. By the time the timers fire, `i === 3` and `items[3]` is undefined. Use `let` (block-scoped) instead.",
+    "tags": ["scope", "closure", "var-vs-let"]
+  },
+  {
+    "id": "js-gen-002",
+    "language": "javascript",
+    "category": "general",
+    "difficulty": "easy",
+    "prompt": "What's the bug?",
+    "code": "function isAdult(age) {\n  if (age >= 18) return true;\n}\n\nconsole.log(isAdult(17));",
+    "choices": [
+      { "id": "a", "text": "Returns undefined instead of false when under 18" },
+      { "id": "b", "text": "Comparison should be ==" },
+      { "id": "c", "text": "Missing semicolon after return" },
+      { "id": "d", "text": "age should be a string" }
+    ],
+    "correctChoiceId": "a",
+    "explanation": "There's no explicit `return false` in the else branch, so the function returns `undefined` which is falsy but not `false`. Add `return false` or use `return age >= 18;`.",
+    "tags": ["return", "control-flow"]
+  },
+  {
+    "id": "js-gen-003",
+    "language": "javascript",
+    "category": "general",
+    "difficulty": "medium",
+    "prompt": "What's wrong here?",
+    "code": "async function loadUsers() {\n  const users = fetch('/api/users');\n  return users.json();\n}",
+    "choices": [
+      { "id": "a", "text": "Missing await on fetch — users is a Promise, not a Response" },
+      { "id": "b", "text": "fetch does not exist in async functions" },
+      { "id": "c", "text": "json() should be synchronous" },
+      { "id": "d", "text": "async keyword is in the wrong place" }
+    ],
+    "correctChoiceId": "a",
+    "explanation": "`fetch()` returns a Promise. Without `await`, `users` is a Promise, and Promises don't have a `.json()` method — they have `.then()`. Correct: `const response = await fetch('/api/users'); return response.json();`.",
+    "tags": ["async", "promises"]
+  },
+  {
+    "id": "js-gen-004",
+    "language": "javascript",
+    "category": "general",
+    "difficulty": "medium",
+    "prompt": "Spot the bug:",
+    "code": "const sorted = [10, 2, 33, 4].sort();\nconsole.log(sorted);",
+    "choices": [
+      { "id": "a", "text": "sort() mutates in place, losing original order" },
+      { "id": "b", "text": "sort() compares as strings, giving [10, 2, 33, 4]" },
+      { "id": "c", "text": "Array literal syntax is invalid" },
+      { "id": "d", "text": "sort() requires at least one argument" }
+    ],
+    "correctChoiceId": "b",
+    "explanation": "Without a comparator, `sort()` converts elements to strings and compares lexicographically, so `10` comes before `2`. Pass `(a, b) => a - b` for numeric sort.",
+    "tags": ["sort", "coercion"]
+  },
+  {
+    "id": "js-gen-005",
+    "language": "javascript",
+    "category": "general",
+    "difficulty": "medium",
+    "prompt": "What's the bug?",
+    "code": "function addTag(obj, tag) {\n  obj.tags = obj.tags || [];\n  obj.tags.push(tag);\n  return obj;\n}\n\nconst cfg = {};\naddTag(cfg, 'a');",
+    "choices": [
+      { "id": "a", "text": "cfg is modified in place — the caller's object is mutated" },
+      { "id": "b", "text": "push returns the new length, not the array" },
+      { "id": "c", "text": "The || short-circuit is broken" },
+      { "id": "d", "text": "Object literal needs a type" }
+    ],
+    "correctChoiceId": "a",
+    "explanation": "Objects are passed by reference in JS. This function mutates the caller's object, which often surprises callers. Prefer returning a new object: `return { ...obj, tags: [...(obj.tags ?? []), tag] };`.",
+    "tags": ["mutation", "references"]
+  },
+  {
+    "id": "js-gen-006",
+    "language": "javascript",
+    "category": "general",
+    "difficulty": "hard",
+    "prompt": "Why does this always log 0?",
+    "code": "let count = 0;\nsetTimeout(() => count++, 0);\nconsole.log(count);",
+    "choices": [
+      { "id": "a", "text": "setTimeout with 0 ms runs synchronously before log" },
+      { "id": "b", "text": "count++ returns 0 before incrementing" },
+      { "id": "c", "text": "Timers are queued and log runs first on the current tick" },
+      { "id": "d", "text": "let doesn't persist across ticks" }
+    ],
+    "correctChoiceId": "c",
+    "explanation": "Even with a 0ms delay, the callback is queued in the macrotask queue. The synchronous `console.log(count)` runs first on the current tick, so count is still 0.",
+    "tags": ["event-loop", "async"]
+  },
+  {
+    "id": "js-gen-007",
+    "language": "javascript",
+    "category": "general",
+    "difficulty": "easy",
+    "prompt": "Find the bug:",
+    "code": "const nums = [1, 2, 3];\nconst doubled = nums.map(n => { n * 2 });\nconsole.log(doubled);",
+    "choices": [
+      { "id": "a", "text": "Arrow with braces needs explicit return — doubled is [undefined, undefined, undefined]" },
+      { "id": "b", "text": "map mutates nums" },
+      { "id": "c", "text": "n * 2 should be n ** 2" },
+      { "id": "d", "text": "Array literal is invalid" }
+    ],
+    "correctChoiceId": "a",
+    "explanation": "`{ }` makes the arrow body a block, so you must `return n * 2`. Use either `n => n * 2` (expression body) or `n => { return n * 2; }`.",
+    "tags": ["arrow-functions", "return"]
+  },
+  {
+    "id": "js-gen-008",
+    "language": "javascript",
+    "category": "general",
+    "difficulty": "medium",
+    "prompt": "What's the issue?",
+    "code": "if (user.role == 'admin' || 'owner') {\n  grantAccess();\n}",
+    "choices": [
+      { "id": "a", "text": "'owner' is truthy, so the condition is always true" },
+      { "id": "b", "text": "== should be ===" },
+      { "id": "c", "text": "Parentheses are required around each condition" },
+      { "id": "d", "text": "grantAccess must be async" }
+    ],
+    "correctChoiceId": "a",
+    "explanation": "The expression is parsed as `(user.role == 'admin') || 'owner'`. Since the non-empty string `'owner'` is truthy, the condition is always true. Use `['admin', 'owner'].includes(user.role)`.",
+    "tags": ["operator-precedence", "truthy"]
+  }
+]

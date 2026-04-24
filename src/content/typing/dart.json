@@ -1,0 +1,7 @@
+[
+  { "id": "dart-t-001", "language": "dart", "difficulty": "easy", "description": "Null-aware access", "code": "final upper = name?.toUpperCase() ?? 'anon';" },
+  { "id": "dart-t-002", "language": "dart", "difficulty": "easy", "description": "Final with inference", "code": "final items = <String>['one', 'two', 'three'];" },
+  { "id": "dart-t-003", "language": "dart", "difficulty": "medium", "description": "Stateless widget", "code": "class Hello extends StatelessWidget { const Hello({super.key}); }" },
+  { "id": "dart-t-004", "language": "dart", "difficulty": "medium", "description": "Future with error handling", "code": "Future<User> load() async { return await api.fetchUser(); }" },
+  { "id": "dart-t-005", "language": "dart", "difficulty": "hard", "description": "Cascade builder", "code": "final paint = Paint()..color = Colors.orange..strokeWidth = 2;" }
+]

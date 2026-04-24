@@ -1,0 +1,53 @@
+[
+  {
+    "id": "py-vibe-001",
+    "language": "python",
+    "category": "vibe",
+    "difficulty": "easy",
+    "prompt": "AI wrote this. What's wrong?",
+    "code": "import requests\n\ndata = requests.get_json('https://api.example.com/users')",
+    "choices": [
+      { "id": "a", "text": "requests.get_json doesn't exist — use .get(...).json()" },
+      { "id": "b", "text": "requests is not installable" },
+      { "id": "c", "text": "URL must end in a slash" },
+      { "id": "d", "text": "get_json is synchronous only" }
+    ],
+    "correctChoiceId": "a",
+    "explanation": "A plausible-looking hallucinated API. The `requests` library provides `requests.get(url).json()`, not `get_json`. Always check the real docs.",
+    "tags": ["hallucinated-api", "requests"]
+  },
+  {
+    "id": "py-vibe-002",
+    "language": "python",
+    "category": "vibe",
+    "difficulty": "medium",
+    "prompt": "AI generated this. What breaks?",
+    "code": "from datetime import datetime\n\ndef log_event(msg):\n    now = datetime.utcnow()\n    print(f'[{now.isoformat()}Z] {msg}')",
+    "choices": [
+      { "id": "a", "text": "datetime.utcnow is deprecated and returns naive datetimes" },
+      { "id": "b", "text": "f-strings can't contain method calls" },
+      { "id": "c", "text": "datetime is not in stdlib" },
+      { "id": "d", "text": "isoformat doesn't accept a separator" }
+    ],
+    "correctChoiceId": "a",
+    "explanation": "`datetime.utcnow()` is deprecated (Python 3.12+) because it returns a naive datetime. Use `datetime.now(timezone.utc)` for an aware UTC timestamp.",
+    "tags": ["deprecated-api", "datetime"]
+  },
+  {
+    "id": "py-vibe-003",
+    "language": "python",
+    "category": "vibe",
+    "difficulty": "medium",
+    "prompt": "What's wrong with this AI-suggested SQL helper?",
+    "code": "def get_user(user_id):\n    return db.execute(f\"SELECT * FROM users WHERE id = {user_id}\")",
+    "choices": [
+      { "id": "a", "text": "SQL injection — use parameterized queries" },
+      { "id": "b", "text": "f-strings are slow in SQL" },
+      { "id": "c", "text": "SELECT * is not valid SQL" },
+      { "id": "d", "text": "execute requires a list, not a string" }
+    ],
+    "correctChoiceId": "a",
+    "explanation": "String interpolation into SQL is a classic injection vector. Use parameter substitution: `db.execute('SELECT * FROM users WHERE id = ?', (user_id,))`.",
+    "tags": ["security", "sql-injection"]
+  }
+]

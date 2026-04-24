@@ -1,0 +1,53 @@
+[
+  {
+    "id": "dart-gen-001",
+    "language": "dart",
+    "category": "general",
+    "difficulty": "easy",
+    "prompt": "What's wrong?",
+    "code": "String? name;\nString upper = name.toUpperCase();",
+    "choices": [
+      { "id": "a", "text": "name is nullable — need null check or use !" },
+      { "id": "b", "text": "toUpperCase doesn't exist on String" },
+      { "id": "c", "text": "upper must be final" },
+      { "id": "d", "text": "String is a reserved keyword" }
+    ],
+    "correctChoiceId": "a",
+    "explanation": "Dart's null safety: you can't call `toUpperCase()` on a `String?` directly. Guard with `if (name != null)` or use `name?.toUpperCase() ?? ''`.",
+    "tags": ["null-safety"]
+  },
+  {
+    "id": "dart-gen-002",
+    "language": "dart",
+    "category": "general",
+    "difficulty": "medium",
+    "prompt": "Flutter widget. What's wrong?",
+    "code": "Future<void> loadData(BuildContext context) async {\n  final data = await api.fetch();\n  Navigator.of(context).push(...);\n}",
+    "choices": [
+      { "id": "a", "text": "Using BuildContext across async gap — check context.mounted first" },
+      { "id": "b", "text": "Navigator.of is deprecated" },
+      { "id": "c", "text": "BuildContext can't be nullable" },
+      { "id": "d", "text": "api.fetch must be synchronous" }
+    ],
+    "correctChoiceId": "a",
+    "explanation": "A widget may be removed from the tree during `await`. Using the context afterwards can throw. Check `if (!context.mounted) return;` before navigating.",
+    "tags": ["flutter", "async", "context"]
+  },
+  {
+    "id": "dart-gen-003",
+    "language": "dart",
+    "category": "general",
+    "difficulty": "medium",
+    "prompt": "What's the bug?",
+    "code": "class Counter {\n  int count = 0;\n  void increment() {\n    count++;\n  }\n  Counter copy() => Counter()..count = count;\n}\n\nfinal a = Counter();\nfinal b = a;\nb.increment();\nprint(a.count);",
+    "choices": [
+      { "id": "a", "text": "a.count prints 1 — b is a reference to a, not a copy" },
+      { "id": "b", "text": "Cascades aren't valid in Dart" },
+      { "id": "c", "text": "increment can't mutate count" },
+      { "id": "d", "text": "final forbids assignment" }
+    ],
+    "correctChoiceId": "a",
+    "explanation": "`final b = a;` copies the reference, not the instance. Both names point to the same `Counter`. Use the `copy()` method to get an independent instance.",
+    "tags": ["references", "final"]
+  }
+]

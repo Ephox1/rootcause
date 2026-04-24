@@ -1,0 +1,886 @@
+[
+  {
+    "id": "py-gen-001",
+    "language": "python",
+    "category": "general",
+    "difficulty": "easy",
+    "prompt": "What's the bug in this function?",
+    "code": "def add_item(item, items=[]):\n    items.append(item)\n    return items\n\nprint(add_item(\"a\"))\nprint(add_item(\"b\"))",
+    "choices": [
+      { "id": "a", "text": "append() doesn't exist on lists" },
+      { "id": "b", "text": "Mutable default argument is shared across calls" },
+      { "id": "c", "text": "print() needs to be awaited" },
+      { "id": "d", "text": "Missing return type annotation" }
+    ],
+    "correctChoiceId": "b",
+    "explanation": "Default arguments are evaluated once at function definition time. The same list is reused across every call, so add_item(\"b\") returns [\"a\", \"b\"]. Use items=None and assign a new list inside the body.",
+    "tags": ["mutation", "default-args"]
+  },
+  {
+    "id": "py-gen-002",
+    "language": "python",
+    "category": "general",
+    "difficulty": "medium",
+    "prompt": "Why does this loop print the wrong values?",
+    "code": "fns = []\nfor i in range(3):\n    fns.append(lambda: i)\n\nprint([f() for f in fns])",
+    "choices": [
+      { "id": "a", "text": "Prints [0, 1, 2], this is correct" },
+      { "id": "b", "text": "Lambdas capture i by reference; all print 2" },
+      { "id": "c", "text": "range(3) is exclusive of 3, off by one" },
+      { "id": "d", "text": "append is not thread-safe" }
+    ],
+    "correctChoiceId": "b",
+    "explanation": "Python closures close over the variable, not its value. By the time any lambda runs, the loop has finished and i is 2. Fix with lambda i=i: i to capture the current value as a default argument.",
+    "tags": ["closures", "scope"]
+  },
+  {
+    "id": "py-gen-003",
+    "language": "python",
+    "category": "general",
+    "difficulty": "easy",
+    "prompt": "Why does this fail to exit the program?",
+    "code": "import sys\ntry:\n    sys.exit(1)\nexcept:\n    print(\"caught\")\nprint(\"still running\")",
+    "choices": [
+      { "id": "a", "text": "Bare except catches SystemExit because it inherits from BaseException" },
+      { "id": "b", "text": "sys.exit returns instead of raising" },
+      { "id": "c", "text": "Bare except is a syntax error in Python 3.14" },
+      { "id": "d", "text": "print() flushes the exit code away" }
+    ],
+    "correctChoiceId": "a",
+    "explanation": "Bare except catches BaseException, which includes SystemExit, KeyboardInterrupt, and GeneratorExit. Use except Exception: to let those system-level signals propagate, or better, catch the specific exception you intend to handle.",
+    "tags": ["exception-handling", "systemexit"]
+  },
+  {
+    "id": "py-gen-004",
+    "language": "python",
+    "category": "general",
+    "difficulty": "easy",
+    "prompt": "What happens here?",
+    "code": "age = 30\nprint(\"You are \" + age + \" years old\")",
+    "choices": [
+      { "id": "a", "text": "Prints 'You are 30 years old', Python auto-converts" },
+      { "id": "b", "text": "TypeError: can only concatenate str (not int) to str" },
+      { "id": "c", "text": "Prints 'You are  years old' with age dropped" },
+      { "id": "d", "text": "SyntaxError on the + operator" }
+    ],
+    "correctChoiceId": "b",
+    "explanation": "Python 3 does not implicitly coerce int to str for +. Use an f-string (f\"You are {age} years old\"), str(age), or pass multiple arguments to print().",
+    "tags": ["type-coercion", "strings"]
+  },
+  {
+    "id": "py-gen-005",
+    "language": "python",
+    "category": "general",
+    "difficulty": "medium",
+    "prompt": "Why does this not remove all even numbers?",
+    "code": "nums = [1, 2, 3, 4, 5, 6]\nfor n in nums:\n    if n % 2 == 0:\n        nums.remove(n)\nprint(nums)",
+    "choices": [
+      { "id": "a", "text": "remove() returns a new list, the original is unchanged" },
+      { "id": "b", "text": "Mutating the list while iterating shifts indices and skips elements" },
+      { "id": "c", "text": "RuntimeError: list changed size during iteration" },
+      { "id": "d", "text": "Modulo doesn't work on list elements" }
+    ],
+    "correctChoiceId": "b",
+    "explanation": "remove() shifts subsequent elements left while the iterator's index advances, so every other even gets skipped. Iterate over a copy (for n in nums[:]) or use a list comprehension: nums = [n for n in nums if n % 2].",
+    "tags": ["iteration", "list-mutation"]
+  },
+  {
+    "id": "py-gen-006",
+    "language": "python",
+    "category": "general",
+    "difficulty": "easy",
+    "prompt": "What does data[2:5] return?",
+    "code": "data = list(range(10))\nprint(data[2:5])",
+    "choices": [
+      { "id": "a", "text": "[2, 3, 4] — slice end is exclusive" },
+      { "id": "b", "text": "[2, 3, 4, 5] — slice end is inclusive" },
+      { "id": "c", "text": "[3, 4, 5] — slice start is exclusive" },
+      { "id": "d", "text": "IndexError" }
+    ],
+    "correctChoiceId": "a",
+    "explanation": "Python slicing is [start:end) — the end index is exclusive. To drop first and last use [1:-1]. To include the element at index 5, write data[2:6].",
+    "tags": ["slicing", "off-by-one"]
+  },
+  {
+    "id": "py-gen-007",
+    "language": "python",
+    "category": "general",
+    "difficulty": "easy",
+    "prompt": "What does this print?",
+    "code": "a = 0.1 + 0.2\nif a == 0.3:\n    print(\"equal\")\nelse:\n    print(\"not equal\")",
+    "choices": [
+      { "id": "a", "text": "equal — 0.1 + 0.2 is exactly 0.3" },
+      { "id": "b", "text": "not equal — IEEE 754 rounding makes the sum 0.30000000000000004" },
+      { "id": "c", "text": "SyntaxError" },
+      { "id": "d", "text": "Raises a warning and prints equal" }
+    ],
+    "correctChoiceId": "b",
+    "explanation": "Floats can't represent 0.1 or 0.2 exactly in binary. Never use == on floats; use math.isclose() or the decimal module for exact decimal arithmetic.",
+    "tags": ["float-precision", "equality"]
+  },
+  {
+    "id": "py-gen-008",
+    "language": "python",
+    "category": "general",
+    "difficulty": "medium",
+    "prompt": "Why does this raise UnboundLocalError?",
+    "code": "x = 10\ndef func():\n    print(x)\n    x = 20\n\nfunc()",
+    "choices": [
+      { "id": "a", "text": "The assignment makes x a local variable for the whole function body" },
+      { "id": "b", "text": "Missing global keyword is required to read any outer variable" },
+      { "id": "c", "text": "print cannot access outer scope" },
+      { "id": "d", "text": "x = 20 runs before print" }
+    ],
+    "correctChoiceId": "a",
+    "explanation": "Any assignment inside a function marks the name as local for the entire function scope. Reading x before the assignment raises UnboundLocalError. Use 'global x' or 'nonlocal x' if you intend to modify the outer binding.",
+    "tags": ["scope", "unboundlocalerror"]
+  },
+  {
+    "id": "py-gen-009",
+    "language": "python",
+    "category": "general",
+    "difficulty": "medium",
+    "prompt": "What does this print?",
+    "code": "import asyncio\n\nasync def fetch():\n    await asyncio.sleep(0.1)\n    return \"data\"\n\nasync def main():\n    data = fetch()\n    print(data)\n\nasyncio.run(main())",
+    "choices": [
+      { "id": "a", "text": "'data' after a short delay" },
+      { "id": "b", "text": "A coroutine object repr, because fetch() was not awaited" },
+      { "id": "c", "text": "asyncio.run is deprecated in Python 3.14" },
+      { "id": "d", "text": "Blocks forever" }
+    ],
+    "correctChoiceId": "b",
+    "explanation": "Calling an async def returns a coroutine object; you must await it to run it and get its result. Write: data = await fetch(). A RuntimeWarning is also emitted for the never-awaited coroutine.",
+    "tags": ["async-await", "coroutines"]
+  },
+  {
+    "id": "py-gen-010",
+    "language": "python",
+    "category": "general",
+    "difficulty": "hard",
+    "prompt": "Why does d[key] lookup fail at the end?",
+    "code": "d = {}\nkey = [1, 2]\nd[tuple(key)] = \"value\"\nkey.append(3)\nprint(d[key])",
+    "choices": [
+      { "id": "a", "text": "Lists are unhashable, so d[key] raises TypeError" },
+      { "id": "b", "text": "The key was stored as a tuple but looked up as a list" },
+      { "id": "c", "text": "append() invalidates the dictionary" },
+      { "id": "d", "text": "Both a and b describe the bug" }
+    ],
+    "correctChoiceId": "d",
+    "explanation": "Dict keys must be hashable and lists aren't. Even if you fix that by storing tuple(key), looking up with the raw list still raises TypeError: unhashable type: 'list'. Always use immutable keys (tuple, frozenset, str).",
+    "tags": ["hashability", "dict-keys"]
+  },
+  {
+    "id": "py-gen-011",
+    "language": "python",
+    "category": "general",
+    "difficulty": "easy",
+    "prompt": "What does this print?",
+    "code": "user = None\nprint(user.name)",
+    "choices": [
+      { "id": "a", "text": "None" },
+      { "id": "b", "text": "Empty string" },
+      { "id": "c", "text": "AttributeError: 'NoneType' object has no attribute 'name'" },
+      { "id": "d", "text": "NameError" }
+    ],
+    "correctChoiceId": "c",
+    "explanation": "Attribute access on None always raises AttributeError. Guard with 'if user is not None:' or use getattr(user, 'name', None) to get a default.",
+    "tags": ["null-handling", "attributeerror"]
+  },
+  {
+    "id": "py-gen-012",
+    "language": "python",
+    "category": "general",
+    "difficulty": "medium",
+    "prompt": "What's the subtle bug here?",
+    "code": "def read_first_line(path):\n    f = open(path)\n    line = f.readline()\n    return line",
+    "choices": [
+      { "id": "a", "text": "open() requires a mode argument" },
+      { "id": "b", "text": "readline() returns bytes, not str" },
+      { "id": "c", "text": "The file handle is never explicitly closed; rely on GC for cleanup" },
+      { "id": "d", "text": "path must be bytes" }
+    ],
+    "correctChoiceId": "c",
+    "explanation": "Without 'with' or f.close(), the file descriptor stays open until the object is garbage collected. On PyPy, or under heavy load, this can exhaust descriptors. Always use 'with open(path) as f:' for deterministic cleanup.",
+    "tags": ["resource-leaks", "file-handling"]
+  },
+  {
+    "id": "py-gen-013",
+    "language": "python",
+    "category": "general",
+    "difficulty": "medium",
+    "prompt": "What does this raise in Python 3.12+?",
+    "code": "from datetime import datetime, timezone\nnaive = datetime(2026, 4, 24, 12, 0)\naware = datetime(2026, 4, 24, 12, 0, tzinfo=timezone.utc)\nprint(naive < aware)",
+    "choices": [
+      { "id": "a", "text": "Prints True — both represent the same instant" },
+      { "id": "b", "text": "Prints False silently" },
+      { "id": "c", "text": "TypeError: can't compare offset-naive and offset-aware datetimes" },
+      { "id": "d", "text": "ValueError on the comparison" }
+    ],
+    "correctChoiceId": "c",
+    "explanation": "Ordering comparisons (<, >, <=, >=) between naive and aware datetimes raise TypeError. Equality (==) returns False. Always keep datetimes tz-aware using zoneinfo or datetime.timezone.",
+    "tags": ["datetime", "timezone"]
+  },
+  {
+    "id": "py-gen-014",
+    "language": "python",
+    "category": "general",
+    "difficulty": "medium",
+    "prompt": "Why does the second list(g) print []?",
+    "code": "def gen():\n    yield 1\n    yield 2\n\ng = gen()\nprint(list(g))\nprint(list(g))",
+    "choices": [
+      { "id": "a", "text": "Generators are single-use; once exhausted they yield nothing" },
+      { "id": "b", "text": "list() consumes generators twice" },
+      { "id": "c", "text": "yield only works once per call" },
+      { "id": "d", "text": "The generator needs a reset() call" }
+    ],
+    "correctChoiceId": "a",
+    "explanation": "Generators are single-use iterators. Once exhausted, subsequent iteration returns nothing. Re-call gen() to get a fresh iterator, or use itertools.tee, or convert to a list once if you need multiple passes.",
+    "tags": ["generators", "iterator-exhaustion"]
+  },
+  {
+    "id": "py-gen-015",
+    "language": "python",
+    "category": "general",
+    "difficulty": "hard",
+    "prompt": "What does d[Point(1, 2)] raise?",
+    "code": "class Point:\n    def __init__(self, x, y):\n        self.x, self.y = x, y\n    def __eq__(self, other):\n        return (self.x, self.y) == (other.x, other.y)\n\np1 = Point(1, 2)\nd = {p1: \"origin\"}\nprint(d[Point(1, 2)])",
+    "choices": [
+      { "id": "a", "text": "'origin' — __eq__ handles the lookup" },
+      { "id": "b", "text": "KeyError — the hash of the new Point differs from p1" },
+      { "id": "c", "text": "TypeError: unhashable type: 'Point'" },
+      { "id": "d", "text": "Prints None" }
+    ],
+    "correctChoiceId": "c",
+    "explanation": "Defining __eq__ without __hash__ makes instances unhashable (Python sets __hash__ to None). You can't use them as dict keys or set members. Either implement __hash__ consistently with __eq__, or use @dataclass(frozen=True), or set __hash__ = None intentionally.",
+    "tags": ["hash-eq-contract", "custom-class"]
+  },
+  {
+    "id": "py-gen-016",
+    "language": "python",
+    "category": "general",
+    "difficulty": "hard",
+    "prompt": "In Python 3.14's free-threaded build, what's wrong here?",
+    "code": "import threading\ncount = 0\n\ndef inc():\n    global count\n    for _ in range(100_000):\n        count += 1\n\nthreads = [threading.Thread(target=inc) for _ in range(4)]\nfor t in threads: t.start()\nfor t in threads: t.join()\nprint(count)",
+    "choices": [
+      { "id": "a", "text": "Always prints 400000 because the GIL serializes += " },
+      { "id": "b", "text": "On the free-threaded build, count += 1 is not atomic; lost updates give a number less than 400000" },
+      { "id": "c", "text": "threading is not available in 3.14" },
+      { "id": "d", "text": "global is required outside the function" }
+    ],
+    "correctChoiceId": "b",
+    "explanation": "Python 3.14's free-threaded build (PEP 703 / PEP 779, officially supported) disables the GIL. Plain Python '+=' is a read-modify-write, not atomic. Use threading.Lock, queue.Queue, or atomics via a ctypes/concurrent primitive.",
+    "tags": ["free-threaded", "race-condition", "threading"]
+  },
+  {
+    "id": "py-gen-017",
+    "language": "python",
+    "category": "general",
+    "difficulty": "easy",
+    "prompt": "What does this print?",
+    "code": "print(any([]))\nprint(all([]))",
+    "choices": [
+      { "id": "a", "text": "False then True — vacuously false, vacuously true" },
+      { "id": "b", "text": "False then False" },
+      { "id": "c", "text": "True then True" },
+      { "id": "d", "text": "TypeError on empty iterable" }
+    ],
+    "correctChoiceId": "a",
+    "explanation": "any([]) has no truthy element so it's False. all([]) has no falsy element to refute it, so it's vacuously True. This surprises many developers filtering empty collections.",
+    "tags": ["any-all", "empty-iterable"]
+  },
+  {
+    "id": "py-gen-018",
+    "language": "python",
+    "category": "general",
+    "difficulty": "easy",
+    "prompt": "What does this print?",
+    "code": "a = 5\nprint(1 < a < 10)\nprint(1 < a > 10)",
+    "choices": [
+      { "id": "a", "text": "True then False" },
+      { "id": "b", "text": "True then True" },
+      { "id": "c", "text": "False then False" },
+      { "id": "d", "text": "SyntaxError — chained comparisons require parentheses" }
+    ],
+    "correctChoiceId": "a",
+    "explanation": "1 < a < 10 is (1 < a) and (a < 10) with a evaluated once. 1 < a > 10 is (1 < a) and (a > 10) which is True and False = False. Great for range checks, easy to misread.",
+    "tags": ["chained-comparison", "operator-precedence"]
+  },
+  {
+    "id": "py-gen-019",
+    "language": "python",
+    "category": "general",
+    "difficulty": "easy",
+    "prompt": "What does this print?",
+    "code": "a = [1, 2, 3]\nb = [1, 2, 3]\nprint(a == b)\nprint(a is b)",
+    "choices": [
+      { "id": "a", "text": "True then True" },
+      { "id": "b", "text": "True then False — equal contents, different objects" },
+      { "id": "c", "text": "False then True" },
+      { "id": "d", "text": "False then False" }
+    ],
+    "correctChoiceId": "b",
+    "explanation": "== compares values, 'is' compares identity. Each list literal creates a new object. Use 'is' only for sentinels (None, True, False) — never for content equality.",
+    "tags": ["identity-vs-equality", "list"]
+  },
+  {
+    "id": "py-gen-020",
+    "language": "python",
+    "category": "general",
+    "difficulty": "medium",
+    "prompt": "What does this print?",
+    "code": "nums = [3, 1, 2]\nresult = nums.sort()\nprint(result)\nprint(sorted(nums))",
+    "choices": [
+      { "id": "a", "text": "[1, 2, 3] then [1, 2, 3]" },
+      { "id": "b", "text": "None then [1, 2, 3] — list.sort() mutates in place and returns None" },
+      { "id": "c", "text": "[3, 1, 2] then [1, 2, 3]" },
+      { "id": "d", "text": "TypeError on the sort" }
+    ],
+    "correctChoiceId": "b",
+    "explanation": "list.sort() sorts in place and returns None. sorted() returns a new sorted list without mutating. Confusing the two is a classic source of 'my list is still unsorted' bugs.",
+    "tags": ["sorting", "mutation-vs-copy"]
+  },
+  {
+    "id": "py-gen-021",
+    "language": "python",
+    "category": "general",
+    "difficulty": "medium",
+    "prompt": "What does this print?",
+    "code": "class A:\n    def greet(self): return \"A\"\nclass B(A):\n    def greet(self): return \"B\" + super().greet()\nclass C(A):\n    def greet(self): return \"C\" + super().greet()\nclass D(B, C):\n    def greet(self): return \"D\" + super().greet()\n\nprint(D().greet())",
+    "choices": [
+      { "id": "a", "text": "'DBCA' — super() follows the C3 linearization MRO" },
+      { "id": "b", "text": "'DBA' — the diamond skips C" },
+      { "id": "c", "text": "'DCA' — C3 visits C before B" },
+      { "id": "d", "text": "AttributeError on super().greet()" }
+    ],
+    "correctChoiceId": "a",
+    "explanation": "Python uses C3 linearization. D's MRO is D → B → C → A → object, so B's super() resolves to C, not A. This is why you should always call super() in cooperative multiple inheritance.",
+    "tags": ["multiple-inheritance", "mro", "super"]
+  },
+  {
+    "id": "py-gen-022",
+    "language": "python",
+    "category": "general",
+    "difficulty": "medium",
+    "prompt": "What does this raise?",
+    "code": "d = {\"a\": 1, \"b\": 2, \"c\": 3}\nfor k in d:\n    if k == \"b\":\n        del d[k]\nprint(d)",
+    "choices": [
+      { "id": "a", "text": "Prints {'a': 1, 'c': 3}" },
+      { "id": "b", "text": "RuntimeError: dictionary changed size during iteration" },
+      { "id": "c", "text": "KeyError on the next iteration" },
+      { "id": "d", "text": "Silently does nothing" }
+    ],
+    "correctChoiceId": "b",
+    "explanation": "Modifying a dict's keys while iterating raises RuntimeError in CPython. Iterate over list(d) to get a snapshot of keys, or build a new dict with a comprehension.",
+    "tags": ["dict-mutation", "iteration"]
+  },
+  {
+    "id": "py-gen-023",
+    "language": "python",
+    "category": "general",
+    "difficulty": "medium",
+    "prompt": "What's the problem here?",
+    "code": "from dataclasses import dataclass\n\n@dataclass\nclass User:\n    tags: list = []\n\nu1 = User()\nu1.tags.append(\"admin\")\nu2 = User()\nprint(u2.tags)",
+    "choices": [
+      { "id": "a", "text": "Prints [] — each instance has its own list" },
+      { "id": "b", "text": "ValueError at class definition: mutable default not allowed" },
+      { "id": "c", "text": "Prints ['admin'] — same shared default" },
+      { "id": "d", "text": "Prints None" }
+    ],
+    "correctChoiceId": "b",
+    "explanation": "dataclass raises ValueError at class creation for mutable defaults (list, dict, set). Use field(default_factory=list) to get a fresh instance per object. The error exists specifically to prevent the shared-default trap.",
+    "tags": ["dataclass", "mutable-default"]
+  },
+  {
+    "id": "py-gen-024",
+    "language": "python",
+    "category": "general",
+    "difficulty": "easy",
+    "prompt": "What does this raise?",
+    "code": "import json\nfrom datetime import datetime\n\nd = {\"dt\": datetime.now()}\nprint(json.dumps(d))",
+    "choices": [
+      { "id": "a", "text": "Prints {'dt': '2026-...'} — datetime serializes as ISO" },
+      { "id": "b", "text": "TypeError: Object of type datetime is not JSON serializable" },
+      { "id": "c", "text": "Raises a DeprecationWarning" },
+      { "id": "d", "text": "Prints {'dt': null}" }
+    ],
+    "correctChoiceId": "b",
+    "explanation": "json.dumps only knows built-in types. Datetime, Decimal, and custom objects need default=str, a custom encoder class, or serialization to a known type before dumping.",
+    "tags": ["json", "serialization"]
+  },
+  {
+    "id": "py-gen-025",
+    "language": "python",
+    "category": "general",
+    "difficulty": "medium",
+    "prompt": "What does this print?",
+    "code": "from enum import Enum\n\nclass Color(Enum):\n    RED = \"red\"\n\nprint(Color.RED == \"red\")",
+    "choices": [
+      { "id": "a", "text": "True — Enum compares to its value" },
+      { "id": "b", "text": "False — Enum members are not equal to their raw values" },
+      { "id": "c", "text": "TypeError" },
+      { "id": "d", "text": "Prints 'red'" }
+    ],
+    "correctChoiceId": "b",
+    "explanation": "Enum members are not equal to their values. Use Color.RED.value == 'red', or subclass StrEnum (3.11+) which mixes str into the enum so comparisons and formatting work naturally.",
+    "tags": ["enum", "comparison"]
+  },
+  {
+    "id": "py-gen-026",
+    "language": "python",
+    "category": "general",
+    "difficulty": "hard",
+    "prompt": "What does this print?",
+    "code": "from dataclasses import dataclass\n\n@dataclass(frozen=True)\nclass Point:\n    x: int\n    y: int\n\np = Point(1, 2)\np.x = 3\nprint(p)",
+    "choices": [
+      { "id": "a", "text": "Point(x=3, y=2)" },
+      { "id": "b", "text": "dataclasses.FrozenInstanceError on the assignment" },
+      { "id": "c", "text": "Silently ignores the assignment" },
+      { "id": "d", "text": "TypeError" }
+    ],
+    "correctChoiceId": "b",
+    "explanation": "frozen=True generates __setattr__ that raises FrozenInstanceError. It's the idiomatic way to create immutable value objects, and it also makes the instance hashable automatically.",
+    "tags": ["dataclass", "immutability"]
+  },
+  {
+    "id": "py-gen-027",
+    "language": "python",
+    "category": "general",
+    "difficulty": "medium",
+    "prompt": "Why is the caught exception less useful than it should be?",
+    "code": "try:\n    raise ValueError(\"bad input\")\nexcept Exception as e:\n    raise RuntimeError(\"wrapper failed\")",
+    "choices": [
+      { "id": "a", "text": "RuntimeError can't wrap ValueError" },
+      { "id": "b", "text": "The original traceback context is still preserved via implicit chaining, but intent should be explicit with 'raise ... from e'" },
+      { "id": "c", "text": "'raise' with no argument is required" },
+      { "id": "d", "text": "ValueError was never caught" }
+    ],
+    "correctChoiceId": "b",
+    "explanation": "Python auto-chains via __context__, so the original is visible in the traceback. But 'raise RuntimeError(...) from e' sets __cause__ explicitly, producing a clearer 'The above exception was the direct cause' message and communicating intent.",
+    "tags": ["exceptions", "chaining"]
+  },
+  {
+    "id": "py-gen-028",
+    "language": "python",
+    "category": "general",
+    "difficulty": "medium",
+    "prompt": "What's wrong with this intersection?",
+    "code": "big_set = set(range(1_000_000))\nsmall_list = [1, 2, 3]\nprint(len(big_set & small_list))",
+    "choices": [
+      { "id": "a", "text": "Slow but correct; prints 3" },
+      { "id": "b", "text": "TypeError: unsupported operand type(s) for &: 'set' and 'list'" },
+      { "id": "c", "text": "Prints 0 because list is unhashable" },
+      { "id": "d", "text": "Python 3.14 optimized this" }
+    ],
+    "correctChoiceId": "b",
+    "explanation": "Set operators (&, |, -, ^) require both operands to be sets. Use big_set.intersection(small_list), which accepts any iterable, or convert explicitly with set(small_list).",
+    "tags": ["set-operations", "type-error"]
+  },
+  {
+    "id": "py-gen-029",
+    "language": "python",
+    "category": "general",
+    "difficulty": "easy",
+    "prompt": "What does this print?",
+    "code": "print(round(2.5))\nprint(round(3.5))",
+    "choices": [
+      { "id": "a", "text": "3 then 4 — schoolbook rounding" },
+      { "id": "b", "text": "2 then 4 — banker's rounding (half to even)" },
+      { "id": "c", "text": "2 then 3 — floor rounding" },
+      { "id": "d", "text": "3 then 3" }
+    ],
+    "correctChoiceId": "b",
+    "explanation": "Python's round() implements IEEE 754 banker's rounding: halves round to the nearest even digit. 2.5 → 2, 3.5 → 4. Use decimal.Decimal.quantize for explicit control if you need half-up rounding.",
+    "tags": ["round", "bankers-rounding"]
+  },
+  {
+    "id": "py-gen-030",
+    "language": "python",
+    "category": "general",
+    "difficulty": "medium",
+    "prompt": "Why does zip stop early?",
+    "code": "a = [1, 2]\nb = [\"x\", \"y\", \"z\"]\nprint(list(zip(a, b)))",
+    "choices": [
+      { "id": "a", "text": "zip stops at the shortest iterable" },
+      { "id": "b", "text": "zip raises on unequal-length iterables" },
+      { "id": "c", "text": "zip pads with None by default" },
+      { "id": "d", "text": "zip converts to set first" }
+    ],
+    "correctChoiceId": "a",
+    "explanation": "zip() stops at the shortest input. For padded behavior use itertools.zip_longest(a, b, fillvalue=None). Python 3.10+ offers zip(a, b, strict=True) to raise if lengths differ.",
+    "tags": ["zip", "itertools"]
+  },
+  {
+    "id": "py-gen-031",
+    "language": "python",
+    "category": "general",
+    "difficulty": "easy",
+    "prompt": "What's wrong?",
+    "code": "def heavy(n):\n    import pandas as pd\n    return pd.DataFrame({\"n\": range(n)})",
+    "choices": [
+      { "id": "a", "text": "import inside a function is a SyntaxError" },
+      { "id": "b", "text": "Nothing breaks, but the import lookup in sys.modules adds measurable overhead in hot loops" },
+      { "id": "c", "text": "pandas cannot be imported from within a function" },
+      { "id": "d", "text": "DataFrame fails on a range iterator" }
+    ],
+    "correctChoiceId": "b",
+    "explanation": "Imports are cached in sys.modules so the module itself is only loaded once. But the name resolution still runs on every call and adds a small fixed cost. Move imports to the top of the module unless you have a deliberate reason (lazy loading, circular imports).",
+    "tags": ["imports", "performance"]
+  },
+  {
+    "id": "py-gen-032",
+    "language": "python",
+    "category": "general",
+    "difficulty": "easy",
+    "prompt": "What does this print?",
+    "code": "from collections import defaultdict\n\nd = defaultdict(int)\nprint(d[\"missing\"])",
+    "choices": [
+      { "id": "a", "text": "0 — defaultdict creates missing keys via the factory" },
+      { "id": "b", "text": "KeyError" },
+      { "id": "c", "text": "None" },
+      { "id": "d", "text": "TypeError: int() missing argument" }
+    ],
+    "correctChoiceId": "a",
+    "explanation": "defaultdict calls the factory (int → 0) whenever a missing key is accessed, and stores the result. Use it for counters and grouping instead of dict.setdefault in hot paths.",
+    "tags": ["defaultdict", "collections"]
+  },
+  {
+    "id": "py-gen-033",
+    "language": "python",
+    "category": "general",
+    "difficulty": "hard",
+    "prompt": "What does this print in Python 3.14?",
+    "code": "name = \"world\"\ntemplate = t\"Hello {name}\"\nprint(template)",
+    "choices": [
+      { "id": "a", "text": "'Hello world' — t-strings interpolate like f-strings" },
+      { "id": "b", "text": "A Template object repr — t-strings produce string.templatelib.Template, not a str" },
+      { "id": "c", "text": "SyntaxError on the t prefix" },
+      { "id": "d", "text": "NameError: t is not defined" }
+    ],
+    "correctChoiceId": "b",
+    "explanation": "PEP 750 t-strings (new in 3.14) return a string.templatelib.Template object, not a str. You pass them to a processor function that can safely handle interpolations (HTML escaping, SQL parameters, logging). Printing one shows the repr.",
+    "tags": ["t-string", "python-3.14", "pep-750"]
+  },
+  {
+    "id": "py-gen-034",
+    "language": "python",
+    "category": "general",
+    "difficulty": "hard",
+    "prompt": "What does this return in Python 3.14?",
+    "code": "def func(x: list[int]) -> int:\n    return sum(x)\n\nprint(func.__annotations__)",
+    "choices": [
+      { "id": "a", "text": "{'x': list[int], 'return': int} — annotations evaluate to real type objects under PEP 649" },
+      { "id": "b", "text": "{'x': 'list[int]', 'return': 'int'} — annotations are strings by default" },
+      { "id": "c", "text": "Raises NameError because list[int] is a forward reference" },
+      { "id": "d", "text": "Empty dict" }
+    ],
+    "correctChoiceId": "a",
+    "explanation": "Python 3.14 makes annotation evaluation deferred (PEP 649) but still returns real type objects when you access __annotations__ in the default VALUE format. Forward references no longer need to be strings. Use the annotationlib module for FORWARDREF or STRING formats when you need them.",
+    "tags": ["annotations", "pep-649", "python-3.14"]
+  },
+  {
+    "id": "py-gen-035",
+    "language": "python",
+    "category": "general",
+    "difficulty": "medium",
+    "prompt": "What does this print?",
+    "code": "value = [1, 2, 3]\nmatch value:\n    case [1, 2, x]:\n        print(f\"matched {x}\")\n    case _:\n        print(\"no match\")",
+    "choices": [
+      { "id": "a", "text": "matched 3" },
+      { "id": "b", "text": "no match — list patterns require tuple syntax" },
+      { "id": "c", "text": "SyntaxError — match is not valid Python" },
+      { "id": "d", "text": "matched [1, 2, 3]" }
+    ],
+    "correctChoiceId": "a",
+    "explanation": "Structural pattern matching (PEP 634, since Python 3.10) supports sequence patterns against any Sequence. [1, 2, x] matches a three-element sequence starting with 1, 2 and binds the third to x.",
+    "tags": ["match-case", "structural-pattern-matching"]
+  },
+  {
+    "id": "py-gen-036",
+    "language": "python",
+    "category": "general",
+    "difficulty": "medium",
+    "prompt": "Which copy is safe here?",
+    "code": "import copy\nnested = [[1, 2], [3, 4]]\nshallow = copy.copy(nested)\nshallow[0][0] = 99\nprint(nested)",
+    "choices": [
+      { "id": "a", "text": "[[99, 2], [3, 4]] — shallow copy shares inner lists" },
+      { "id": "b", "text": "[[1, 2], [3, 4]] — copy.copy deep-copies lists" },
+      { "id": "c", "text": "Error — copy.copy rejects nested lists" },
+      { "id": "d", "text": "[[1, 2], [3, 4]] only in Python 3.14" }
+    ],
+    "correctChoiceId": "a",
+    "explanation": "copy.copy creates a new outer container but shares the inner objects. Mutating nested[0][0] through the shallow copy affects the original. Use copy.deepcopy to duplicate nested mutables.",
+    "tags": ["copy", "shallow-vs-deep"]
+  },
+  {
+    "id": "py-gen-037",
+    "language": "python",
+    "category": "general",
+    "difficulty": "easy",
+    "prompt": "What does this print?",
+    "code": "print(bool(\"False\"))\nprint(bool(\"\"))\nprint(bool(0))",
+    "choices": [
+      { "id": "a", "text": "False, False, False — the string 'False' looks falsy" },
+      { "id": "b", "text": "True, False, False — any non-empty string is truthy" },
+      { "id": "c", "text": "True, True, False" },
+      { "id": "d", "text": "False, True, False" }
+    ],
+    "correctChoiceId": "b",
+    "explanation": "Only empty containers, 0, 0.0, None, and False are falsy. The non-empty string 'False' is truthy. This catches people parsing config or CLI flags — always compare explicitly or use a parser.",
+    "tags": ["truthiness", "bool-conversion"]
+  },
+  {
+    "id": "py-gen-038",
+    "language": "python",
+    "category": "general",
+    "difficulty": "hard",
+    "prompt": "What risk does this code have?",
+    "code": "import subprocess\nuser_cmd = \"ls; rm -rf /\"\nsubprocess.call(user_cmd, shell=True)",
+    "choices": [
+      { "id": "a", "text": "Works fine, subprocess sandboxes the input" },
+      { "id": "b", "text": "shell=True with interpolated user input is a shell-injection vulnerability" },
+      { "id": "c", "text": "call() is deprecated, but the command is safe" },
+      { "id": "d", "text": "ls fails and the rest is skipped" }
+    ],
+    "correctChoiceId": "b",
+    "explanation": "shell=True passes the string to the system shell, which interprets ;, |, &, backticks, and more. Never combine shell=True with untrusted input. Pass a list and omit shell=True, or escape with shlex.quote if you must use a shell.",
+    "tags": ["security", "subprocess"]
+  },
+  {
+    "id": "py-gen-039",
+    "language": "python",
+    "category": "general",
+    "difficulty": "easy",
+    "prompt": "What does this print?",
+    "code": "t = (1, 2, [3])\nt[2].append(4)\nprint(t)",
+    "choices": [
+      { "id": "a", "text": "(1, 2, [3, 4]) — tuple holds a list reference that is still mutable" },
+      { "id": "b", "text": "TypeError — tuples are fully immutable" },
+      { "id": "c", "text": "(1, 2, [3]) — append silently ignored" },
+      { "id": "d", "text": "(1, 2, [3], 4)" }
+    ],
+    "correctChoiceId": "a",
+    "explanation": "Tuple immutability means you can't replace the elements, but if an element is itself mutable (like a list), that object can still be mutated. For truly immutable nested structures use tuples-of-tuples or frozenset.",
+    "tags": ["tuples", "mutability"]
+  },
+  {
+    "id": "py-gen-040",
+    "language": "python",
+    "category": "general",
+    "difficulty": "medium",
+    "prompt": "What does the walrus-assigned n look like after the if?",
+    "code": "if (n := len([1, 2, 3])) > 0:\n    print(n)\nprint(n)",
+    "choices": [
+      { "id": "a", "text": "Prints 3 then 3 — walrus binds n in the enclosing scope" },
+      { "id": "b", "text": "Prints 3 then NameError — walrus is scoped to the condition" },
+      { "id": "c", "text": "Prints None then 3" },
+      { "id": "d", "text": "SyntaxError: := not allowed in if" }
+    ],
+    "correctChoiceId": "a",
+    "explanation": "The walrus operator := binds in the enclosing function or module scope (not in comprehensions, where it's deliberately scoped differently). Useful for 'read once, test, and reuse' patterns.",
+    "tags": ["walrus-operator", "scope"]
+  },
+  {
+    "id": "py-gen-041",
+    "language": "python",
+    "category": "general",
+    "difficulty": "easy",
+    "prompt": "What does this print?",
+    "code": "lst = [1, 2]\nlst.append([3, 4])\nprint(len(lst))",
+    "choices": [
+      { "id": "a", "text": "3 — append adds the list as a single element" },
+      { "id": "b", "text": "4 — append flattens the list" },
+      { "id": "c", "text": "2 — append fails on a nested list" },
+      { "id": "d", "text": "TypeError" }
+    ],
+    "correctChoiceId": "a",
+    "explanation": "append adds one element (the argument itself). To merge elements use extend, +=, or spread: lst.extend([3, 4]). Confusing the two produces deeply nested lists when you wanted flat ones.",
+    "tags": ["list-methods", "append-vs-extend"]
+  },
+  {
+    "id": "py-gen-042",
+    "language": "python",
+    "category": "general",
+    "difficulty": "medium",
+    "prompt": "Why does c2.count not print 0?",
+    "code": "class Counter:\n    count = []\n    def inc(self):\n        self.count.append(1)\n\nc1 = Counter()\nc2 = Counter()\nc1.inc()\nprint(len(c2.count))",
+    "choices": [
+      { "id": "a", "text": "Prints 1 — count is a class attribute shared by all instances" },
+      { "id": "b", "text": "Prints 0 — self.count creates a fresh list per instance" },
+      { "id": "c", "text": "TypeError — list is not allowed as class attribute" },
+      { "id": "d", "text": "Prints 2" }
+    ],
+    "correctChoiceId": "a",
+    "explanation": "Mutable class attributes are shared across all instances. self.count.append mutates the class-level list. For per-instance state, initialize in __init__: self.count = []. This is the class-level version of the mutable default argument trap.",
+    "tags": ["class-attributes", "mutability"]
+  },
+  {
+    "id": "py-gen-043",
+    "language": "python",
+    "category": "general",
+    "difficulty": "hard",
+    "prompt": "What's unsafe here?",
+    "code": "import pickle\nuntrusted = get_user_data_from_network()\ndata = pickle.loads(untrusted)",
+    "choices": [
+      { "id": "a", "text": "pickle is slow — prefer JSON for performance" },
+      { "id": "b", "text": "pickle.loads on untrusted input can execute arbitrary code — use JSON or another safe format" },
+      { "id": "c", "text": "pickle requires Python 3.14" },
+      { "id": "d", "text": "loads() must be called on bytes, not str" }
+    ],
+    "correctChoiceId": "b",
+    "explanation": "Pickle deserialization calls __reduce__ and can instantiate any class or call any callable — crafted payloads can drop shells. Never unpickle untrusted data. Use JSON, MessagePack, or a schema-validated format like Protocol Buffers.",
+    "tags": ["pickle", "security", "deserialization"]
+  },
+  {
+    "id": "py-gen-044",
+    "language": "python",
+    "category": "general",
+    "difficulty": "hard",
+    "prompt": "Why might this create a memory issue?",
+    "code": "class Node:\n    def __init__(self, name):\n        self.name = name\n        self.child = None\n    def __del__(self):\n        print(f\"deleting {self.name}\")\n\nroot = Node(\"root\")\nchild = Node(\"child\")\nchild.parent = root\nroot.child = child",
+    "choices": [
+      { "id": "a", "text": "Cycles with __del__ used to be uncollectable; modern CPython handles them, but it's still safer to break cycles with weakref" },
+      { "id": "b", "text": "Python can't ever collect circular references" },
+      { "id": "c", "text": "__del__ prevents garbage collection entirely" },
+      { "id": "d", "text": "Nothing is wrong" }
+    ],
+    "correctChoiceId": "a",
+    "explanation": "Since Python 3.4 the cyclic garbage collector handles cycles that include __del__ finalizers. Still, __del__ is error-prone (no guaranteed order, can resurrect objects) and keeps objects in memory longer than necessary. Prefer weakref for parent pointers.",
+    "tags": ["weakref", "gc", "circular-reference"]
+  },
+  {
+    "id": "py-gen-045",
+    "language": "python",
+    "category": "general",
+    "difficulty": "medium",
+    "prompt": "What does c.x print?",
+    "code": "class Desc:\n    def __get__(self, obj, owner=None):\n        return obj.__dict__.get(\"_value\", 0)\n    def __set__(self, obj, value):\n        obj.__dict__[\"_value\"] = value\n\nclass C:\n    x = Desc()\n\nc = C()\nc.x = 42\nprint(c.x)",
+    "choices": [
+      { "id": "a", "text": "42 — descriptor __get__ reads _value from instance __dict__" },
+      { "id": "b", "text": "0 — __set__ stored in _value but __get__ is bypassed" },
+      { "id": "c", "text": "AttributeError: descriptor not found" },
+      { "id": "d", "text": "TypeError on __set__" }
+    ],
+    "correctChoiceId": "a",
+    "explanation": "Because Desc defines both __get__ and __set__, it's a data descriptor and takes precedence over instance __dict__. __set__ stores in _value, and __get__ reads it back. Non-data descriptors (only __get__) would be shadowed by instance __dict__.",
+    "tags": ["descriptor-protocol", "metaprogramming"]
+  },
+  {
+    "id": "py-gen-046",
+    "language": "python",
+    "category": "general",
+    "difficulty": "medium",
+    "prompt": "What's subtle here?",
+    "code": "from functools import lru_cache\n\nclass Calculator:\n    @lru_cache(maxsize=128)\n    def fib(self, n):\n        if n < 2:\n            return n\n        return self.fib(n - 1) + self.fib(n - 2)\n\ncalc = Calculator()\nprint(calc.fib(10))",
+    "choices": [
+      { "id": "a", "text": "55 — works correctly" },
+      { "id": "b", "text": "lru_cache on methods keeps self alive for the cache's lifetime, causing a subtle memory leak per instance" },
+      { "id": "c", "text": "TypeError because self is unhashable" },
+      { "id": "d", "text": "RecursionError" }
+    ],
+    "correctChoiceId": "b",
+    "explanation": "lru_cache on a bound method includes self in the cache key, pinning the instance in memory for the cache's lifetime. Use functools.cache on a staticmethod, functools.cached_property, or a weakref-based cache for per-instance memoization.",
+    "tags": ["lru-cache", "method-caching", "memory-leak"]
+  },
+  {
+    "id": "py-gen-047",
+    "language": "python",
+    "category": "general",
+    "difficulty": "easy",
+    "prompt": "What does this print?",
+    "code": "import threading\nlocal_data = threading.local()\nlocal_data.value = 42\n\ndef worker():\n    print(getattr(local_data, \"value\", \"not set\"))\n\nt = threading.Thread(target=worker)\nt.start()\nt.join()",
+    "choices": [
+      { "id": "a", "text": "42 — thread.local is shared across threads" },
+      { "id": "b", "text": "'not set' — each thread has its own attribute namespace" },
+      { "id": "c", "text": "AttributeError: value" },
+      { "id": "d", "text": "threading.local was removed in Python 3.14" }
+    ],
+    "correctChoiceId": "b",
+    "explanation": "threading.local() creates a per-thread attribute namespace. Values set in one thread aren't visible in others. This is the idiomatic way to pass per-thread context (db connection, request id) without explicit arguments.",
+    "tags": ["threading-local", "thread-safety"]
+  },
+  {
+    "id": "py-gen-048",
+    "language": "python",
+    "category": "general",
+    "difficulty": "medium",
+    "prompt": "Why is match/case exhaustive here?",
+    "code": "status = 404\nmatch status:\n    case 200:\n        print(\"ok\")\n    case _:\n        print(\"error\")",
+    "choices": [
+      { "id": "a", "text": "The underscore pattern matches anything, making the match total" },
+      { "id": "b", "text": "match auto-generates a default case at runtime" },
+      { "id": "c", "text": "case 200 requires a guard expression" },
+      { "id": "d", "text": "case statements fall through like switch in C" }
+    ],
+    "correctChoiceId": "a",
+    "explanation": "The underscore (_) pattern is the wildcard — it matches anything and acts as the default. Python match statements do NOT fall through between cases; each is independent.",
+    "tags": ["match-case", "wildcard"]
+  },
+  {
+    "id": "py-gen-049",
+    "language": "python",
+    "category": "general",
+    "difficulty": "easy",
+    "prompt": "What does this print?",
+    "code": "from collections import defaultdict\nd = defaultdict(list)\nd[\"a\"].append(1)\nprint(d[\"b\"])\nprint(dict(d))",
+    "choices": [
+      { "id": "a", "text": "Prints [] then {'a': [1]} — accessing d['b'] doesn't create it" },
+      { "id": "b", "text": "Prints [] then {'a': [1], 'b': []} — defaultdict stores the default on access" },
+      { "id": "c", "text": "KeyError on d['b']" },
+      { "id": "d", "text": "None then {'a': [1]}" }
+    ],
+    "correctChoiceId": "b",
+    "explanation": "Unlike dict.get, bracket-access on a defaultdict does call the factory and store the default permanently. Use d.get('b', []) for a read-only lookup that doesn't mutate the dict.",
+    "tags": ["defaultdict", "side-effect"]
+  },
+  {
+    "id": "py-gen-050",
+    "language": "python",
+    "category": "general",
+    "difficulty": "hard",
+    "prompt": "In Python 3.14, what's this doing?",
+    "code": "from concurrent import interpreters\ninterp = interpreters.create()\ninterp.exec(\"x = 42\")\nprint(interp.get(\"x\"))",
+    "choices": [
+      { "id": "a", "text": "42 — subinterpreters share globals" },
+      { "id": "b", "text": "Raises or returns nothing meaningful — each subinterpreter has its own isolated namespace" },
+      { "id": "c", "text": "ModuleNotFoundError — concurrent.interpreters doesn't exist" },
+      { "id": "d", "text": "Deadlocks" }
+    ],
+    "correctChoiceId": "b",
+    "explanation": "PEP 734 added the concurrent.interpreters module in Python 3.14. Each subinterpreter has its own __main__, builtins, and module state — the whole point is strong isolation. Passing data requires explicit channels; you can't just 'get' a variable across interpreters.",
+    "tags": ["subinterpreter", "concurrent-interpreters", "python-3.14"]
+  },
+  {
+    "id": "py-gen-051",
+    "language": "python",
+    "category": "general",
+    "difficulty": "easy",
+    "prompt": "What does this print?",
+    "code": "print(\"hello world\".replace(\"o\", \"0\"))\nprint(\"hello world\".replace(\"o\", \"0\", 1))",
+    "choices": [
+      { "id": "a", "text": "'hell0 w0rld' then 'hell0 world' — third arg is maxreplace" },
+      { "id": "b", "text": "Both 'hell0 w0rld' — third arg is ignored" },
+      { "id": "c", "text": "TypeError on the second call" },
+      { "id": "d", "text": "'hello world' then 'hell0 world'" }
+    ],
+    "correctChoiceId": "a",
+    "explanation": "str.replace(old, new, count) replaces at most `count` occurrences. Useful when you only want to fix the first match without writing a regex.",
+    "tags": ["strings", "replace"]
+  },
+  {
+    "id": "py-gen-052",
+    "language": "python",
+    "category": "general",
+    "difficulty": "medium",
+    "prompt": "What does this print?",
+    "code": "d1 = {\"a\": 1, \"b\": 2}\nd2 = {\"b\": 20, \"c\": 30}\nmerged = d1 | d2\nprint(merged)",
+    "choices": [
+      { "id": "a", "text": "{'a': 1, 'b': 20, 'c': 30} — rightmost value wins on conflict" },
+      { "id": "b", "text": "{'a': 1, 'b': 2, 'c': 30} — leftmost value wins" },
+      { "id": "c", "text": "TypeError: | not supported between dicts" },
+      { "id": "d", "text": "{'a': 1, 'b': [2, 20], 'c': 30}" }
+    ],
+    "correctChoiceId": "a",
+    "explanation": "Since Python 3.9 (PEP 584), dict | dict returns a new merged dict with the right operand's values winning on key collision. Use |= for in-place update.",
+    "tags": ["dict-merge", "pep-584"]
+  }
+]

@@ -1,0 +1,7 @@
+[
+  { "id": "js-t-001", "language": "javascript", "difficulty": "easy", "description": "Array map with arrow", "code": "const doubled = nums.map(n => n * 2);" },
+  { "id": "js-t-002", "language": "javascript", "difficulty": "easy", "description": "Destructuring import", "code": "import { useState, useEffect } from 'react';" },
+  { "id": "js-t-003", "language": "javascript", "difficulty": "medium", "description": "Async try/catch", "code": "try { const r = await fetch(url); } catch (err) { console.error(err); }" },
+  { "id": "js-t-004", "language": "javascript", "difficulty": "medium", "description": "Object spread with override", "code": "const next = { ...prev, updated: Date.now() };" },
+  { "id": "js-t-005", "language": "javascript", "difficulty": "hard", "description": "Debounced handler", "code": "const handler = useMemo(() => debounce((q) => search(q), 200), []);" }
+]

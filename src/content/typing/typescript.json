@@ -1,0 +1,7 @@
+[
+  { "id": "ts-t-001", "language": "typescript", "difficulty": "easy", "description": "Type alias union", "code": "type Status = 'idle' | 'loading' | 'error';" },
+  { "id": "ts-t-002", "language": "typescript", "difficulty": "easy", "description": "Generic function signature", "code": "function identity<T>(value: T): T { return value; }" },
+  { "id": "ts-t-003", "language": "typescript", "difficulty": "medium", "description": "Interface with optional", "code": "interface User { id: string; name: string; email?: string; }" },
+  { "id": "ts-t-004", "language": "typescript", "difficulty": "medium", "description": "Narrowed unknown", "code": "if (error instanceof Error) throw new Error(error.message);" },
+  { "id": "ts-t-005", "language": "typescript", "difficulty": "hard", "description": "Mapped type", "code": "type Readonly<T> = { readonly [K in keyof T]: T[K] };" }
+]

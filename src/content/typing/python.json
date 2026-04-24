@@ -1,0 +1,7 @@
+[
+  { "id": "py-t-001", "language": "python", "difficulty": "easy", "description": "List comprehension", "code": "doubled = [n * 2 for n in nums if n > 0]" },
+  { "id": "py-t-002", "language": "python", "difficulty": "easy", "description": "f-string with format", "code": "print(f'Total: {total:.2f}')" },
+  { "id": "py-t-003", "language": "python", "difficulty": "medium", "description": "Context manager", "code": "with open(path, 'r', encoding='utf-8') as f: data = f.read()" },
+  { "id": "py-t-004", "language": "python", "difficulty": "medium", "description": "Dict comprehension", "code": "by_id = {u.id: u for u in users}" },
+  { "id": "py-t-005", "language": "python", "difficulty": "hard", "description": "Dataclass", "code": "@dataclass(frozen=True)\nclass User: id: str; name: str" }
+]
