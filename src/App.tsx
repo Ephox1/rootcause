@@ -7,12 +7,15 @@ import { TypeRaceScreen } from './screens/TypeRaceScreen';
 import { EndOfRunScreen } from './screens/EndOfRunScreen';
 import { SettingsScreen } from './screens/SettingsScreen';
 import { StatsScreen } from './screens/StatsScreen';
+import { useAudio } from './audio/useAudio';
 
 export function App() {
   const route = useGameStore((s) => s.route);
   const theme = useGameStore((s) => s.theme);
   const crt = useGameStore((s) => s.crt);
   const updateSettings = useGameStore((s) => s.updateSettings);
+
+  useAudio();
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);

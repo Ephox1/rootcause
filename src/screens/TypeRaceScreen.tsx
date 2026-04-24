@@ -4,6 +4,7 @@ import { SectionTag } from '../components/SectionTag';
 import { PixelButton } from '../components/PixelButton';
 import { BackIcon, KeyboardIcon } from '../components/icons';
 import { useGameStore } from '../store/useGameStore';
+import { sfxKeypress } from '../audio/sfx';
 
 export function TypeRaceScreen() {
   const state = useGameStore();
@@ -77,9 +78,10 @@ export function TypeRaceScreen() {
       setWrongKey(true);
       setTimeout(() => setWrongKey(false), 160);
     }
-    if (lastCh) {
+    if (lastCh && v.length > input.length) {
       setPressedKey(lastCh);
       setTimeout(() => setPressedKey(null), 140);
+      if (state.sfx) sfxKeypress();
     }
     setInput(v);
   };
