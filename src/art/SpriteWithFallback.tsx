@@ -10,15 +10,15 @@ interface SpriteWithFallbackProps {
 
 /**
  * Renders a PNG sprite from /public/sprites/ if it exists, otherwise falls
- * back to the SVG pixel-grid children. The app ships working either way —
- * dropping a PNG with the expected filename into public/sprites/ takes over.
+ * back to the SVG pixel-grid children. The app ships working either way.
+ * Dropping a PNG with the expected filename into public/sprites/ takes over.
  *
- * We probe the file with a cheap HEAD request (cached by the browser) so the
+ * We probe the file with a cheap image preload (cached by the browser) so the
  * fallback decision is made once per src per session.
  *
  * NOTE: This is a placeholder for the future `react-aseprite-sprite` package
  * (sibling repo at ../react-aseprite-sprite). Once that ships, swap this
- * component for the library's <Sprite> — it adds a third tier that plays
+ * component for the library's <Sprite>. It adds a third tier that plays
  * animated Aseprite sheets above both of the tiers here.
  */
 export function SpriteWithFallback({ src, size, alt, fallback, style }: SpriteWithFallbackProps) {
@@ -55,7 +55,7 @@ export function SpriteWithFallback({ src, size, alt, fallback, style }: SpriteWi
     );
   }
 
-  // 'probing' or 'missing' — render the SVG fallback immediately so there's
+  // 'probing' or 'missing': render the SVG fallback immediately so there is
   // no visible flash. When probing succeeds, we swap to the PNG.
   return <>{fallback}</>;
 }

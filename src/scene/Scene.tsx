@@ -167,7 +167,10 @@ export function Scene({
   const fogColor = isDark ? 'rgba(60, 74, 110, 0.18)' : 'rgba(255, 248, 240, 0.35)';
 
   const treeSize = compact ? 220 : focusTree ? 320 : 300;
-  const charSize = compact ? 170 : 240;
+  // Character sheet cells are 1:2 aspect (256x512), so actual render height
+  // is charSize * 2. Keep charSize modest so the tower-tall sprite doesn't
+  // dwarf the tree.
+  const charSize = compact ? 130 : 180;
 
   return (
     <div
@@ -438,7 +441,7 @@ export function Scene({
         </div>
       )}
 
-      {/* Character */}
+      {/* Character — width-anchored; height flexes with sprite aspect. */}
       {showCharacter && !focusTree && (
         <div
           style={{
@@ -446,9 +449,8 @@ export function Scene({
             right: compact ? '6%' : '10%',
             bottom: compact ? '4%' : '6%',
             width: charSize,
-            height: charSize,
             filter: isDark ? 'drop-shadow(0 0 18px rgba(255,140,66,.2))' : 'none',
-            transition: 'width 300ms, height 300ms',
+            transition: 'width 300ms',
           }}
         >
           <Character state={characterState} size={charSize} />

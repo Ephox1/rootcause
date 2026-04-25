@@ -1,7 +1,20 @@
 import { useMemo, type CSSProperties } from 'react';
 import { PixelGrid } from './PixelGrid';
+import { SheetCell } from './SheetCell';
 import { SpriteWithFallback } from './SpriteWithFallback';
 import type { CharacterState } from '../types';
+
+// Mapping from game state to a cell in /sprites/character-sheet.png.
+// Sheet is 6 columns × 2 rows. Top row: idle typing + coffee-sip sequence.
+// Bottom row: reactions (bugs on screen, facepalm, shock, surprise, lean-in,
+// fist-pump victory on frame 11).
+const STATE_CELL: Record<CharacterState, { col: number; row: number }> = {
+  idle: { col: 0, row: 0 },
+  thumbsup: { col: 4, row: 1 },
+  facepalm: { col: 1, row: 1 },
+  sunglasses: { col: 5, row: 0 },
+  fistpump: { col: 5, row: 1 },
+};
 
 const CHAR_PALETTE: Record<string, string> = {
   K: '#080408',
@@ -254,22 +267,42 @@ interface CharacterProps {
 
 export function Character({ state = 'idle', size = 256, style }: CharacterProps) {
   const grid = useMemo(() => makeCharGrid(state), [state]);
+  const cell = STATE_CELL[state];
+
+  const svgFallback = (
+    <svg
+      viewBox="0 0 48 48"
+      width={size}
+      height={size}
+      style={{ shapeRendering: 'crispEdges', imageRendering: 'pixelated', display: 'block', ...style }}
+    >
+      <PixelGrid grid={grid} palette={CHAR_PALETTE} />
+    </svg>
+  );
+
+  // Tier 1: per-state single PNG. Tier 2: grid sheet. Tier 3: SVG.
+  const pngFallback = (
+    <SheetCell
+      src="/sprites/character-sheet.png"
+      col={cell.col}
+      row={cell.row}
+      cols={6}
+      rows={2}
+      size={size}
+      cellAspect={2}
+      alt={`coder ${state}`}
+      fallback={svgFallback}
+      style={style}
+    />
+  );
+
   return (
     <SpriteWithFallback
       src={`/sprites/character-${state}.png`}
       size={size}
       alt={`coder ${state}`}
       style={style}
-      fallback={
-        <svg
-          viewBox="0 0 48 48"
-          width={size}
-          height={size}
-          style={{ shapeRendering: 'crispEdges', imageRendering: 'pixelated', display: 'block', ...style }}
-        >
-          <PixelGrid grid={grid} palette={CHAR_PALETTE} />
-        </svg>
-      }
+      fallback={pngFallback}
     />
   );
 }
