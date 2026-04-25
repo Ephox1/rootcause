@@ -15,6 +15,11 @@ interface SpriteWithFallbackProps {
  *
  * We probe the file with a cheap HEAD request (cached by the browser) so the
  * fallback decision is made once per src per session.
+ *
+ * NOTE: This is a placeholder for the future `react-aseprite-sprite` package
+ * (sibling repo at ../react-aseprite-sprite). Once that ships, swap this
+ * component for the library's <Sprite> — it adds a third tier that plays
+ * animated Aseprite sheets above both of the tiers here.
  */
 export function SpriteWithFallback({ src, size, alt, fallback, style }: SpriteWithFallbackProps) {
   const [status, setStatus] = useState<'probing' | 'found' | 'missing'>('probing');
