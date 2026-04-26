@@ -69,3 +69,19 @@ class MusicPlayer {
 }
 
 export const musicPlayer = new MusicPlayer();
+
+/**
+ * Fire-and-forget one-shot sound (jingle, fail sting, etc.). Creates a
+ * fresh HTMLAudioElement each call so it can overlap with the looping
+ * music track and with itself if rapidly retriggered. The element is
+ * eligible for GC once it ends.
+ */
+export function playSoundFile(src: string, volume = 1): void {
+  const a = new Audio(src);
+  a.volume = Math.max(0, Math.min(1, volume));
+  a.preload = 'auto';
+  void a.play().catch(() => {
+    // Autoplay may be blocked until first interaction — silently ignore.
+  });
+}
+
