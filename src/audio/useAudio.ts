@@ -21,7 +21,6 @@ import {
   sfxStreak5,
   sfxStreak15,
   sfxTreeGrow,
-  sfxWrong,
 } from './sfx';
 
 /**
@@ -165,7 +164,8 @@ export function useAudio(): void {
         window.setTimeout(() => sfxBugSquash(), 180);
       }
     } else if (flashType === 'wrong') {
-      sfxWrong();
+      // Real-recording SFX as the primary "wrong" sting
+      playSoundFile('/audio/sfx-wrong.mp3', sfxVolume);
       // Rustling leaves — intensity matches the visual leaf-fall count
       sfxRustle(difficulty === 'easy' ? 'light' : difficulty === 'medium' ? 'medium' : 'heavy');
       // A bug skitters up onto the trunk ~500ms later as the leaves settle
