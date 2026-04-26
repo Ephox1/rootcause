@@ -11,6 +11,7 @@ import { BUGHUNT_TRACK_IDS, TRACKS, TYPERACE_TRACK_IDS, pickRandom } from './tra
 const EXTERNAL_TRACKS: Record<string, string> = {
   title: '/audio/music-title.mp3',
   bughunt: '/audio/music-bughunt.mp3',
+  typerace: '/audio/music-typerace.mp3',
 };
 import {
   sfxBugCrawl,
@@ -33,6 +34,7 @@ import {
  */
 export function useAudio(): void {
   const route = useGameStore((s) => s.route);
+  const endRunMode = useGameStore((s) => s.endRunMode);
   const music = useGameStore((s) => s.music);
   const sfx = useGameStore((s) => s.sfx);
   const musicVolume = useGameStore((s) => s.musicVolume);
@@ -86,8 +88,17 @@ export function useAudio(): void {
     let externalSrc: string | null = null;
     if (route === 'title' || route === 'settings' || route === 'stats') {
       externalSrc = EXTERNAL_TRACKS.title;
-    } else if (route === 'bughunt' || route === 'endrun') {
+    } else if (route === 'bughunt') {
       externalSrc = EXTERNAL_TRACKS.bughunt ?? null;
+    } else if (route === 'typerace') {
+      externalSrc = EXTERNAL_TRACKS.typerace ?? null;
+    } else if (route === 'endrun') {
+      // Stay on the track that matches the mode the player just finished
+      // so the music doesn't jarringly switch when they hit the summary.
+      externalSrc =
+        endRunMode === 'typerace'
+          ? EXTERNAL_TRACKS.typerace ?? null
+          : EXTERNAL_TRACKS.bughunt ?? null;
     }
 
     if (externalSrc) {
@@ -122,11 +133,11 @@ export function useAudio(): void {
     }
   };
 
-  // Swap track on route / music toggle change
+  // Swap track on route / music toggle / endRunMode change.
   useEffect(() => {
     updateTrack();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [route, music]);
+  }, [route, music, endRunMode]);
 
   // Track music volume and mute (covers both the chiptune engine and
   // the external MP3 player so they stay in sync).
