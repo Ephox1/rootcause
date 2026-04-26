@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { useGameStore } from '../store/useGameStore';
 import { engine } from './ChiptuneEngine';
-import { musicPlayer } from './musicPlayer';
+import { musicPlayer, playSoundFile } from './musicPlayer';
 import { sequencer } from './Sequencer';
 import { BUGHUNT_TRACK_IDS, TRACKS, TYPERACE_TRACK_IDS, pickRandom } from './tracks';
 
@@ -17,7 +17,6 @@ import {
   sfxBugCrawl,
   sfxBugScatter,
   sfxBugSquash,
-  sfxCorrect,
   sfxRustle,
   sfxStreak5,
   sfxStreak15,
@@ -157,8 +156,9 @@ export function useAudio(): void {
     lastFlashTypeRef.current = flashType;
 
     if (flashType === 'correct') {
-      sfxCorrect();
-      // Bugs scattering off the code panel, layered a beat after the arp
+      // Real-recording SFX as the primary "correct" sting
+      playSoundFile('/audio/sfx-correct.mp3', sfxVolume);
+      // Bugs scattering off the code panel, layered a beat after the sting
       window.setTimeout(() => sfxBugScatter(), 80);
       // If there was a stuck bug from the previous wrong answer, squash it
       if (previousFlash === 'wrong') {
