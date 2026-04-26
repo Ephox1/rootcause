@@ -10,6 +10,7 @@ import { BUGHUNT_TRACK_IDS, TRACKS, TYPERACE_TRACK_IDS, pickRandom } from './tra
 // to the real audio file.
 const EXTERNAL_TRACKS: Record<string, string> = {
   title: '/audio/music-title.mp3',
+  bughunt: '/audio/music-bughunt.mp3',
 };
 import {
   sfxBugCrawl,
@@ -79,14 +80,21 @@ export function useAudio(): void {
       return;
     }
 
-    // Title / settings / stats use the external title MP3 if present.
-    // The chiptune sequencer covers gameplay routes.
+    // Title / settings / stats use the external title MP3.
+    // Bug Hunt and the post-run summary share the bug-hunt MP3.
+    // Type Race still uses the chiptune sequencer (until you drop in an MP3).
+    let externalSrc: string | null = null;
     if (route === 'title' || route === 'settings' || route === 'stats') {
+      externalSrc = EXTERNAL_TRACKS.title;
+    } else if (route === 'bughunt' || route === 'endrun') {
+      externalSrc = EXTERNAL_TRACKS.bughunt ?? null;
+    }
+
+    if (externalSrc) {
       sequencer.stop();
-      const src = EXTERNAL_TRACKS.title;
-      if (currentTrackRef.current !== `mp3:${src}`) {
-        musicPlayer.play(src, musicVolume);
-        currentTrackRef.current = `mp3:${src}`;
+      if (currentTrackRef.current !== `mp3:${externalSrc}`) {
+        musicPlayer.play(externalSrc, musicVolume);
+        currentTrackRef.current = `mp3:${externalSrc}`;
       }
       return;
     }
