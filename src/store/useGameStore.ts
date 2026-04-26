@@ -188,7 +188,7 @@ export const useGameStore = create<GameStore>()(
       difficulty: 'medium',
       crt: false,
       reducedMotion: prefersReducedMotion(),
-      music: true,
+      music: false,
       sfx: true,
       musicVolume: 0.6,
       sfxVolume: 0.8,
@@ -421,9 +421,13 @@ export const useGameStore = create<GameStore>()(
       }),
       merge: (persisted, current) => {
         const p = (persisted ?? {}) as Partial<GameStore>;
+        // Music defaults off as of build 2; force-override any older persisted
+        // state so existing users don't get music until they opt in.
+        const audioOverride = { music: false };
         return {
           ...current,
           ...p,
+          ...audioOverride,
           lifetime: p.lifetime ?? current.lifetime,
         };
       },

@@ -61,6 +61,8 @@ export function BugHuntScreen() {
           reducedMotion={state.reducedMotion}
           flashKey={state.flashKey}
           flashType={state.flashType}
+          showTree
+          showCharacter={false}
         />
       </div>
 
