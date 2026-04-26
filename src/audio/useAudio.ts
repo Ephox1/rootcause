@@ -1,8 +1,16 @@
 import { useEffect, useRef } from 'react';
 import { useGameStore } from '../store/useGameStore';
 import { engine } from './ChiptuneEngine';
+import { musicPlayer } from './musicPlayer';
 import { sequencer } from './Sequencer';
 import { BUGHUNT_TRACK_IDS, TRACKS, TYPERACE_TRACK_IDS, pickRandom } from './tracks';
+
+// External MP3 tracks (full-fidelity, looping) — keyed by ID. The route
+// → external map below decides when to swap from the chiptune sequencer
+// to the real audio file.
+const EXTERNAL_TRACKS: Record<string, string> = {
+  title: '/audio/music-title.mp3',
+};
 import {
   sfxBugCrawl,
   sfxBugScatter,
@@ -66,13 +74,28 @@ export function useAudio(): void {
     if (!unlockedRef.current) return;
     if (!music) {
       sequencer.stop();
+      musicPlayer.stop();
       currentTrackRef.current = null;
       return;
     }
-    let trackId: string | null = null;
+
+    // Title / settings / stats use the external title MP3 if present.
+    // The chiptune sequencer covers gameplay routes.
     if (route === 'title' || route === 'settings' || route === 'stats') {
-      trackId = 'title';
-    } else if (route === 'bughunt' || route === 'endrun') {
+      sequencer.stop();
+      const src = EXTERNAL_TRACKS.title;
+      if (currentTrackRef.current !== `mp3:${src}`) {
+        musicPlayer.play(src, musicVolume);
+        currentTrackRef.current = `mp3:${src}`;
+      }
+      return;
+    }
+
+    // Leaving the MP3 routes — kill it before the sequencer takes over.
+    musicPlayer.stop();
+
+    let trackId: string | null = null;
+    if (route === 'bughunt' || route === 'endrun') {
       trackId = pickRandom(BUGHUNT_TRACK_IDS);
     } else if (route === 'typerace') {
       if (!typeRaceTrackRef.current) {
@@ -97,10 +120,13 @@ export function useAudio(): void {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [route, music]);
 
-  // Track music volume and mute
+  // Track music volume and mute (covers both the chiptune engine and
+  // the external MP3 player so they stay in sync).
   useEffect(() => {
     engine.setVolume(musicVolume);
     engine.setMuted(!music);
+    musicPlayer.setVolume(musicVolume);
+    musicPlayer.setMuted(!music);
   }, [musicVolume, music]);
 
   // SFX triggers on flashKey change
