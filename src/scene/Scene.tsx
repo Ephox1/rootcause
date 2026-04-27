@@ -182,14 +182,17 @@ export function Scene({
   const bgSrc = isDark ? 'sprites/bg-night.png' : 'sprites/bg-day.png';
   const { w: stageW, h: stageH } = useStageSize(STAGE_RATIO);
 
-  // Tree displays in front of background, slightly right of center. Scaled
-  // down from earlier sizing so the dirt mound on early-stage sprites
-  // doesn't dwarf the desk + character.
-  const treeSize = compact ? 360 : focusTree ? 540 : 380;
+  // Tree displays in front of background, slightly right of center.
+  // Sized as a fraction of stageH so it stays proportional to the painted
+  // scene at any viewport (so the same composition reads the same in both
+  // an embedded iframe and a fullscreen browser tab).
+  const treeSize = Math.round(
+    stageH * (focusTree ? 0.50 : compact ? 0.33 : 0.35),
+  );
   // Character anchored bottom-LEFT to match the painted desk position.
-  // Sized to match the visual scale of the painted scene (similar footprint
-  // to the title-screen character) without dominating the viewport.
-  const charSize = compact ? 420 : 500;
+  // Same stageH-fraction approach as the tree so the desk + character keep
+  // the same proportions across viewport sizes.
+  const charSize = Math.round(stageH * (compact ? 0.39 : 0.46));
 
   return (
     <div
