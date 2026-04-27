@@ -182,8 +182,10 @@ export function Scene({
   const bgSrc = isDark ? 'sprites/bg-night.png' : 'sprites/bg-day.png';
   const { w: stageW, h: stageH } = useStageSize(STAGE_RATIO);
 
-  // Tree displays in front of background, slightly right of center.
-  const treeSize = compact ? 360 : focusTree ? 620 : 540;
+  // Tree displays in front of background, slightly right of center. Scaled
+  // down from earlier sizing so the dirt mound on early-stage sprites
+  // doesn't dwarf the desk + character.
+  const treeSize = compact ? 360 : focusTree ? 540 : 380;
   // Character anchored bottom-LEFT to match the painted desk position.
   // Sized to match the visual scale of the painted scene (similar footprint
   // to the title-screen character) without dominating the viewport.
@@ -335,9 +337,10 @@ export function Scene({
           style={{
             position: 'absolute',
             // Bug Hunt sits slightly further left so the plant mound stays
-            // clearly visible to the right of the desk; Type Race uses the
-            // tighter 45% anchor that's already validated.
-            left: compact ? '45%' : '42%',
+            // clearly visible to the right of the desk. Type Race shifts
+            // even further left so the character isn't hidden behind the
+            // pixel keyboard at non-fullscreen viewport sizes.
+            left: compact ? '35%' : '42%',
             bottom: compact ? '-3%' : '-5%',
             width: charSize,
             transform: 'translateX(-85%)',
