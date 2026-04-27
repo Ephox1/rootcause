@@ -24,7 +24,7 @@
     "prompt": "What's the subtle bug?",
     "code": "type Status = 'ok' | 'error';\n\nfunction describe(s: Status): string {\n  switch (s) {\n    case 'ok': return 'all good';\n  }\n}",
     "choices": [
-      { "id": "a", "text": "Missing 'error' case — function can return undefined" },
+      { "id": "a", "text": "Missing 'error' case - function can return undefined" },
       { "id": "b", "text": "switch can't match string literals" },
       { "id": "c", "text": "Status should be an enum" },
       { "id": "d", "text": "return type cannot be string" }
@@ -41,7 +41,7 @@
     "prompt": "What breaks at runtime?",
     "code": "interface User { id: string; name: string }\nconst raw = JSON.parse(localStorage.getItem('u')!);\nconst user: User = raw;",
     "choices": [
-      { "id": "a", "text": "Type assertion doesn't validate — raw might not match User at runtime" },
+      { "id": "a", "text": "Type assertion doesn't validate - raw might not match User at runtime" },
       { "id": "b", "text": "JSON.parse returns a string" },
       { "id": "c", "text": "localStorage is not available" },
       { "id": "d", "text": "! is disallowed in strict mode" }

@@ -2,7 +2,7 @@
 
 Running log of engineering trade-offs and the reasoning behind them.
 
-## No Pixi.js — scene is pure SVG + CSS
+## No Pixi.js - scene is pure SVG + CSS
 
 The build plan proposes Pixi.js for the scene. We shipped without it.
 
@@ -14,7 +14,7 @@ The build plan proposes Pixi.js for the scene. We shipped without it.
 
 The plan suggests shiki (with a prismjs fallback if the bundle exceeds 500 KB).
 
-**Why:** shiki ships WASM and the full VS Code grammar set — too heavy for ~10 tokens-per-snippet highlighting of four languages. We wrote a ~200-line token-based highlighter (`src/syntax/highlight.ts`) that handles keywords, strings, numbers, comments, types, and function calls well enough for the questions we author. It's language-agnostic and adding a new language is ~10 lines.
+**Why:** shiki ships WASM and the full VS Code grammar set - too heavy for ~10 tokens-per-snippet highlighting of four languages. We wrote a ~200-line token-based highlighter (`src/syntax/highlight.ts`) that handles keywords, strings, numbers, comments, types, and function calls well enough for the questions we author. It's language-agnostic and adding a new language is ~10 lines.
 
 **Trade-off:** Our highlighter doesn't nest (template-string-inside-string, regex literals, JSX). Acceptable for question snippets; we'd swap to shiki if the content ever needed full fidelity.
 
@@ -30,7 +30,7 @@ Tree stages and the character are authored as character-grid strings (`src/art/t
 
 All settings and lifetime stats persist; run-in-progress state does not.
 
-**Why:** Someone mid-run who closes the tab shouldn't return to a half-answered question — that's worse UX than starting fresh. But their language/category/difficulty/theme/volume settings should survive.
+**Why:** Someone mid-run who closes the tab shouldn't return to a half-answered question - that's worse UX than starting fresh. But their language/category/difficulty/theme/volume settings should survive.
 
 ## Questions and snippets as plain JSON
 

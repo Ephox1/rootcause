@@ -8,7 +8,7 @@
     "code": "const items = ['a', 'b', 'c'];\nfor (var i = 0; i < items.length; i++) {\n  setTimeout(() => console.log(items[i]), 100);\n}",
     "choices": [
       { "id": "a", "text": "setTimeout needs a string callback" },
-      { "id": "b", "text": "var creates a single shared i — all callbacks log 'undefined'" },
+      { "id": "b", "text": "var creates a single shared i - all callbacks log 'undefined'" },
       { "id": "c", "text": "items.length is off by one" },
       { "id": "d", "text": "console.log is not defined in timers" }
     ],
@@ -41,13 +41,13 @@
     "prompt": "What's wrong here?",
     "code": "async function loadUsers() {\n  const users = fetch('/api/users');\n  return users.json();\n}",
     "choices": [
-      { "id": "a", "text": "Missing await on fetch — users is a Promise, not a Response" },
+      { "id": "a", "text": "Missing await on fetch - users is a Promise, not a Response" },
       { "id": "b", "text": "fetch does not exist in async functions" },
       { "id": "c", "text": "json() should be synchronous" },
       { "id": "d", "text": "async keyword is in the wrong place" }
     ],
     "correctChoiceId": "a",
-    "explanation": "`fetch()` returns a Promise. Without `await`, `users` is a Promise, and Promises don't have a `.json()` method — they have `.then()`. Correct: `const response = await fetch('/api/users'); return response.json();`.",
+    "explanation": "`fetch()` returns a Promise. Without `await`, `users` is a Promise, and Promises don't have a `.json()` method - they have `.then()`. Correct: `const response = await fetch('/api/users'); return response.json();`.",
     "tags": ["async", "promises"]
   },
   {
@@ -75,7 +75,7 @@
     "prompt": "What's the bug?",
     "code": "function addTag(obj, tag) {\n  obj.tags = obj.tags || [];\n  obj.tags.push(tag);\n  return obj;\n}\n\nconst cfg = {};\naddTag(cfg, 'a');",
     "choices": [
-      { "id": "a", "text": "cfg is modified in place — the caller's object is mutated" },
+      { "id": "a", "text": "cfg is modified in place - the caller's object is mutated" },
       { "id": "b", "text": "push returns the new length, not the array" },
       { "id": "c", "text": "The || short-circuit is broken" },
       { "id": "d", "text": "Object literal needs a type" }
@@ -109,7 +109,7 @@
     "prompt": "Find the bug:",
     "code": "const nums = [1, 2, 3];\nconst doubled = nums.map(n => { n * 2 });\nconsole.log(doubled);",
     "choices": [
-      { "id": "a", "text": "Arrow with braces needs explicit return — doubled is [undefined, undefined, undefined]" },
+      { "id": "a", "text": "Arrow with braces needs explicit return - doubled is [undefined, undefined, undefined]" },
       { "id": "b", "text": "map mutates nums" },
       { "id": "c", "text": "n * 2 should be n ** 2" },
       { "id": "d", "text": "Array literal is invalid" }

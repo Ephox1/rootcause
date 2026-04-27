@@ -132,7 +132,7 @@ export function useAudio(): void {
     }
   }, [flashKey, flashType, sfx, sfxVolume]);
 
-  // Streak milestone chimes — one per streak crossing.
+  // Streak milestone chimes - one per streak crossing.
   useEffect(() => {
     if (!sfx || !unlockedRef.current) return;
     const prev = lastStreakRef.current;

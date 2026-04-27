@@ -183,7 +183,7 @@ export function TitleScreen(): JSX.Element {
         justifyContent: 'center',
       }}
     >
-      {/* Stage layer — painted bg, character, sun/moon hit-zone. Cover-sized
+      {/* Stage layer - painted bg, character, sun/moon hit-zone. Cover-sized
           so the painted art fills the viewport; UI chrome lives outside the
           stage so it isn't cropped by the cover overflow. */}
       <div
@@ -248,7 +248,7 @@ export function TitleScreen(): JSX.Element {
         />
       </div>
 
-      {/* Chrome layer — viewport-anchored so title/buttons/HUD stay on screen
+      {/* Chrome layer - viewport-anchored so title/buttons/HUD stay on screen
           at every aspect ratio. */}
       <div
         style={{
@@ -284,7 +284,7 @@ export function TitleScreen(): JSX.Element {
             width: '64%',
           }}
         >
-          {/* Language picker — drives the question + snippet pools that
+          {/* Language picker - drives the question + snippet pools that
               Bug Hunt and Type Race pull from. */}
           <LanguagePicker
             value={language}

@@ -21,10 +21,10 @@
     "language": "javascript",
     "category": "vibe",
     "difficulty": "medium",
-    "prompt": "AI wrote this — what's the bug?",
+    "prompt": "AI wrote this - what's the bug?",
     "code": "import { debounce } from 'lodash';\n\nconst handler = debounce(() => {\n  console.log('search', this.query);\n}, 200);",
     "choices": [
-      { "id": "a", "text": "Arrow function has no own `this` — it's the surrounding scope's, not the component's" },
+      { "id": "a", "text": "Arrow function has no own `this` - it's the surrounding scope's, not the component's" },
       { "id": "b", "text": "lodash doesn't export debounce" },
       { "id": "c", "text": "debounce requires 3 arguments" },
       { "id": "d", "text": "console.log can't access `this`" }
@@ -41,7 +41,7 @@
     "prompt": "What's plausible but broken here?",
     "code": "const result = array.reduce((acc, x) => acc + x);",
     "choices": [
-      { "id": "a", "text": "Missing initial value — empty arrays throw TypeError" },
+      { "id": "a", "text": "Missing initial value - empty arrays throw TypeError" },
       { "id": "b", "text": "reduce mutates the array" },
       { "id": "c", "text": "+= is required, not +" },
       { "id": "d", "text": "acc should be declared with const" }
@@ -55,10 +55,10 @@
     "language": "javascript",
     "category": "vibe",
     "difficulty": "hard",
-    "prompt": "AI suggested this — what's the silent failure?",
+    "prompt": "AI suggested this - what's the silent failure?",
     "code": "try {\n  await saveOrder(order);\n} catch {}\nreturn { ok: true };",
     "choices": [
-      { "id": "a", "text": "Empty catch swallows errors — callers think it succeeded" },
+      { "id": "a", "text": "Empty catch swallows errors - callers think it succeeded" },
       { "id": "b", "text": "catch requires an error parameter" },
       { "id": "c", "text": "saveOrder must return a value" },
       { "id": "d", "text": "try is not allowed in async" }

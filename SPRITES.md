@@ -1,13 +1,13 @@
 # Sprite Shopping List
 
-Drop PNGs into `public/sprites/` with the exact filenames below. The app loads each one if it exists and falls back to the SVG pixel-grid version otherwise — so you can add them incrementally without breaking anything.
+Drop PNGs into `public/sprites/` with the exact filenames below. The app loads each one if it exists and falls back to the SVG pixel-grid version otherwise - so you can add them incrementally without breaking anything.
 
 ## Style guide (from the reference concept art)
 
-- **Chunky 8-bit pixel art** — visible, crunchy pixels, no anti-aliasing
+- **Chunky 8-bit pixel art** - visible, crunchy pixels, no anti-aliasing
 - **Transparent PNG** backgrounds (alpha channel, not a solid color)
 - **Limited palette** per sprite (6–12 colors), strong silhouettes
-- **Consistent lighting** — light source top-right (matches moon/sun position in scene)
+- **Consistent lighting** - light source top-right (matches moon/sun position in scene)
 - **Dark outline or 1-pixel shadow** for contrast against the parallax sky
 
 ## Dimensions
@@ -16,11 +16,11 @@ All square. Source at **256×256** is ideal (it renders crisply at the in-app si
 
 ---
 
-## 1. Tree — 6 stages × 4 seasonal variants
+## 1. Tree - 6 stages × 4 seasonal variants
 
 Grows from seed (stage 0) to full bloom (stage 5). Seasonal variant swaps leaf color at streak thresholds.
 
-### Base green (streaks 1–9) — **required**
+### Base green (streaks 1–9) - **required**
 
 | File | Stage | Description |
 |---|---|---|
@@ -31,7 +31,7 @@ Grows from seed (stage 0) to full bloom (stage 5). Seasonal variant swaps leaf c
 | `tree-green-4.png` | Full tree | Thick trunk, layered canopy with 3–4 distinct leaf clumps |
 | `tree-green-5.png` | Full bloom | Large lush tree, 5+ leaf clumps, maybe a bird or fireflies |
 
-### Seasonal variants — only stage 5 needed for MVP
+### Seasonal variants - only stage 5 needed for MVP
 
 | File | Variant | Streak threshold |
 |---|---|---|
@@ -48,14 +48,14 @@ Grows from seed (stage 0) to full bloom (stage 5). Seasonal variant swaps leaf c
 {variant: lush green leaves / cherry blossom pink leaves / autumn orange and red leaves / bare winter branches with snow}.
 Chunky pixels, no anti-aliasing, visible pixel grid, limited palette of greens/browns,
 strong silhouette, 1-pixel dark outline, lighting from top-right. Retro arcade aesthetic.
-No background, no ground tile — just the tree.
+No background, no ground tile - just the tree.
 ```
 
 ---
 
-## 2. Character — 5 states
+## 2. Character - 5 states
 
-A coder at a wooden desk with a CRT-style monitor and coffee mug. The whole tableau (character + desk + monitor + mug) is one sprite — matches the reference concept art.
+A coder at a wooden desk with a CRT-style monitor and coffee mug. The whole tableau (character + desk + monitor + mug) is one sprite - matches the reference concept art.
 
 The character faces **left** (looking at the monitor on their left). Brown/black short hair, dark hoodie.
 
@@ -75,7 +75,7 @@ seen from 3/4 angle, facing left toward a chunky CRT monitor glowing orange with
 code lines. Dark blue hoodie, short hair. Steam rising from coffee mug on desk
 (except facepalm). {state-specific pose}.
 Chunky pixels, no anti-aliasing, 1-pixel dark outline, warm side-lit palette,
-limited colors. Retro arcade aesthetic. No floor, no background — just character + desk + monitor + mug.
+limited colors. Retro arcade aesthetic. No floor, no background - just character + desk + monitor + mug.
 ```
 
 ---
@@ -117,7 +117,7 @@ sloped roof, two windows glowing warm orange, log-cabin texture, chunky pixels,
 
 ## How the fallback works
 
-`src/art/SpriteWithFallback.tsx` probes each filename with an `Image()` load. If the PNG exists, it renders. If it 404s, the SVG pixel-grid fallback renders instead. No build step, no manifest — just drop PNGs in `public/sprites/` and refresh.
+`src/art/SpriteWithFallback.tsx` probes each filename with an `Image()` load. If the PNG exists, it renders. If it 404s, the SVG pixel-grid fallback renders instead. No build step, no manifest - just drop PNGs in `public/sprites/` and refresh.
 
 Missing sprites = SVG fallback, which is already working art. You can ship ANY subset of this list.
 
@@ -125,9 +125,9 @@ Missing sprites = SVG fallback, which is already working art. You can ship ANY s
 
 If you only have time for a few:
 
-1. **`character-idle.png`, `character-thumbsup.png`, `character-facepalm.png`** — these are what players see most during Bug Hunt
-2. **`tree-green-5.png`** — the fully-grown tree, shown on the Title and End-of-run screens
-3. **`moon.png`, `sun.png`** — instant sky upgrade
-4. **`cabin-dark.png`, `cabin-light.png`** — sets the atmospheric tone
+1. **`character-idle.png`, `character-thumbsup.png`, `character-facepalm.png`** - these are what players see most during Bug Hunt
+2. **`tree-green-5.png`** - the fully-grown tree, shown on the Title and End-of-run screens
+3. **`moon.png`, `sun.png`** - instant sky upgrade
+4. **`cabin-dark.png`, `cabin-light.png`** - sets the atmospheric tone
 5. Rest of tree stages (0–4) as you have time
 6. Seasonal variants

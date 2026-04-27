@@ -11,7 +11,7 @@ interface LeafProps extends SizeProps {
   variant?: TreeVariant;
 }
 
-/** Single falling leaf — used by Scene's wrong-answer particles. */
+/** Single falling leaf - used by Scene's wrong-answer particles. */
 export function Leaf({ size = 10, variant = 'green', style }: LeafProps) {
   const p = TreePalettes[variant];
   return (
@@ -31,7 +31,7 @@ export function Leaf({ size = 10, variant = 'green', style }: LeafProps) {
   );
 }
 
-/** Pixel beetle — used by Scene for stuck-on-trunk and bug-scatter effects. */
+/** Pixel beetle - used by Scene for stuck-on-trunk and bug-scatter effects. */
 export function Bug({ size = 12, style }: SizeProps) {
   return (
     <svg

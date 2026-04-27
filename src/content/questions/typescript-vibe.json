@@ -13,7 +13,7 @@
       { "id": "d", "text": "fetch doesn't exist in Node" }
     ],
     "correctChoiceId": "a",
-    "explanation": "`Promise<any>` defeats the purpose of TypeScript — callers lose autocomplete and safety. Declare a `User` interface and return `Promise<User>`.",
+    "explanation": "`Promise<any>` defeats the purpose of TypeScript - callers lose autocomplete and safety. Declare a `User` interface and return `Promise<User>`.",
     "tags": ["any", "return-types"]
   },
   {
@@ -24,7 +24,7 @@
     "prompt": "What runtime problem hides behind this AI snippet?",
     "code": "function parseConfig(raw: string) {\n  return JSON.parse(raw) as Config;\n}",
     "choices": [
-      { "id": "a", "text": "`as Config` is a cast — raw malformed JSON silently becomes typed Config" },
+      { "id": "a", "text": "`as Config` is a cast - raw malformed JSON silently becomes typed Config" },
       { "id": "b", "text": "JSON.parse can't take a string" },
       { "id": "c", "text": "Config must be declared with interface" },
       { "id": "d", "text": "parseConfig should be async" }

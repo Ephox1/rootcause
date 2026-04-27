@@ -134,7 +134,7 @@ export function StatsScreen() {
                   {stats.correct}/{total}
                 </div>
                 <div style={{ fontFamily: '"Press Start 2P", monospace', fontSize: 10, color: 'var(--accent)' }}>
-                  {stats.bestWPM ? `${stats.bestWPM} WPM` : '—'}
+                  {stats.bestWPM ? `${stats.bestWPM} WPM` : '-'}
                 </div>
               </div>
             );

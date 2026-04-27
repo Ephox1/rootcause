@@ -7,7 +7,7 @@
     "prompt": "AI wrote this Flutter callback. What's wrong?",
     "code": "void load() async {\n  setState(() async {\n    final data = await api.fetch();\n    items = data;\n  });\n}",
     "choices": [
-      { "id": "a", "text": "setState callback must be synchronous — await inside is ignored" },
+      { "id": "a", "text": "setState callback must be synchronous - await inside is ignored" },
       { "id": "b", "text": "setState requires a named parameter" },
       { "id": "c", "text": "api.fetch is not awaitable" },
       { "id": "d", "text": "items must be late" }
@@ -24,13 +24,13 @@
     "prompt": "AI generated. What's plausible but broken?",
     "code": "final controller = StreamController<int>();\nFuture<int> first = controller.stream.first;\ncontroller.add(1);",
     "choices": [
-      { "id": "a", "text": "Single-subscription stream — also missing close() causes leaks" },
+      { "id": "a", "text": "Single-subscription stream - also missing close() causes leaks" },
       { "id": "b", "text": "StreamController has no type parameter" },
       { "id": "c", "text": ".first is synchronous" },
       { "id": "d", "text": "controller.add returns a Future" }
     ],
     "correctChoiceId": "a",
-    "explanation": "A `StreamController` must be closed to free resources. Also, `.stream.first` consumes the single subscription — later listeners will fail. Always `await controller.close();` when done.",
+    "explanation": "A `StreamController` must be closed to free resources. Also, `.stream.first` consumes the single subscription - later listeners will fail. Always `await controller.close();` when done.",
     "tags": ["streams", "resource-cleanup"]
   }
 ]

@@ -12,7 +12,7 @@ interface TreeProps {
  * Hand-painted tree sprite. The 15 green-stage PNGs at /sprites/tree-green-N
  * cover the full progression (seed → apple tree). Seasonal variants
  * (blossom/autumn/winter) are wired through the same path but the PNGs
- * don't exist yet — variantForStreak in the store currently returns 'green'
+ * don't exist yet - variantForStreak in the store currently returns 'green'
  * always, so this code path is forward-compatible without being exercised.
  */
 export function Tree({ stage = 5, variant = 'green', size = 256, style }: TreeProps): JSX.Element {

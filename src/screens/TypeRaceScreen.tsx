@@ -47,7 +47,7 @@ export function TypeRaceScreen() {
     );
   }
 
-  // Intermittent coffee-sip animation gets faster each snippet — slow chill
+  // Intermittent coffee-sip animation gets faster each snippet - slow chill
   // on snippet 1 (~22s between sips) ramping to comically fast on the last
   // snippet (~3s). Recomputes whenever the index advances.
   const drinkProgress =
@@ -61,7 +61,7 @@ export function TypeRaceScreen() {
   const accuracy = input.length === 0 ? 100 : Math.round((correctChars / input.length) * 100);
   const elapsedMinutes =
     startTime === null ? 0 : Math.max(0.016, (Date.now() - startTime) / 1000 / 60);
-  // Raw WPM — counts every typed char regardless of correctness. Speed and
+  // Raw WPM - counts every typed char regardless of correctness. Speed and
   // accuracy are independent: fast-with-errors gets a high WPM and low
   // accuracy. Errors counter carries the mistake count separately.
   const wpm =
@@ -87,7 +87,7 @@ export function TypeRaceScreen() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [done, startTime, completed]);
 
-  // Single global keydown handler — eliminates focus-loss bugs from the old
+  // Single global keydown handler - eliminates focus-loss bugs from the old
   // hidden-input approach. Backspace deletes, Enter advances on completion,
   // Esc exits, printable keys append (when not at the end of the snippet).
   useEffect(() => {
@@ -181,7 +181,7 @@ export function TypeRaceScreen() {
       </div>
 
       <div style={{ position: 'relative', flex: 1, display: 'flex', flexDirection: 'column', gap: 14, padding: '0 16px 20px', justifyContent: 'center', alignItems: 'center' }}>
-        {/* Stats row — grid auto-fits so 4 tiles fit on a normal screen but
+        {/* Stats row - grid auto-fits so 4 tiles fit on a normal screen but
             collapse to 2 columns on narrow viewports. */}
         <div
           style={{
@@ -198,7 +198,7 @@ export function TypeRaceScreen() {
           <StatTile label="PROGRESS" value={`${state.typeRaceIndex + 1} / ${state.typeRaceSnippets.length}`} />
         </div>
 
-        {/* Target panel — what to type. Characters colour as user types. */}
+        {/* Target panel - what to type. Characters colour as user types. */}
         <TypingPanel label={snippet.description}>
           {target.split('').map((ch, i) => {
             const typed = input[i];
@@ -242,7 +242,7 @@ export function TypeRaceScreen() {
           })}
         </TypingPanel>
 
-        {/* Input mirror — same size box, shows user's typed chars only. */}
+        {/* Input mirror - same size box, shows user's typed chars only. */}
         <TypingPanel label="YOUR INPUT" tone="input">
           {input.length === 0 && (
             <span style={{ color: 'var(--text-dim)', opacity: 0.6 }}>
@@ -648,7 +648,7 @@ function PixelKeyboard({ pressed, wrong }: KbProps) {
   if (pressed) {
     const lower = pressed.toLowerCase();
     if (pressed >= 'A' && pressed <= 'Z') {
-      // Uppercase letter — light up the letter cap and Shift.
+      // Uppercase letter - light up the letter cap and Shift.
       activeKey = lower;
       shiftActive = true;
     } else if (SHIFTED_TO_BASE[pressed]) {

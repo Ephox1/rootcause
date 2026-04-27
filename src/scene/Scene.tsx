@@ -6,12 +6,12 @@ import type { CharacterState, Theme, TreeVariant } from '../types';
 
 // Painted backgrounds share a 16:9 aspect ratio. The stage is locked to this
 // ratio so tree/character/particle positions stay pinned to the same painted
-// spot regardless of viewport — and identical across themes.
+// spot regardless of viewport - and identical across themes.
 const STAGE_RATIO = 16 / 9;
 
 // Compute the smallest stage box (preserving aspect ratio) that fully covers
 // the viewport. The stage overflows the viewport on the long axis and is
-// clipped by the parent's overflow:hidden — same effect as object-fit:cover,
+// clipped by the parent's overflow:hidden - same effect as object-fit:cover,
 // but applied to the whole stage so tree/character stay anchored to the
 // painted ground. Re-runs on window resize.
 function useStageSize(ratio: number): { w: number; h: number } {
@@ -52,7 +52,7 @@ interface SceneProps {
   showCharacter?: boolean;
   showTree?: boolean;
   compact?: boolean;
-  /** Pass-through to CharacterAnim — intermittent coffee-sip animation. */
+  /** Pass-through to CharacterAnim - intermittent coffee-sip animation. */
   drinkIntervalMs?: number;
 }
 
@@ -265,7 +265,7 @@ export function Scene({
         </>
       )}
 
-      {/* Tree — centered slightly right, only shown during gameplay */}
+      {/* Tree - centered slightly right, only shown during gameplay */}
       {showTree && (
         <div
           style={{
@@ -328,7 +328,7 @@ export function Scene({
         </div>
       )}
 
-      {/* Character — desk right edge anchored to ~45% of stage (just left of
+      {/* Character - desk right edge anchored to ~45% of stage (just left of
           the tree mound at 48%). translateX(-85%) shifts by the ratio of the
           desk's right edge inside the source PNG, so alignment stays fixed
           across viewports rather than drifting with stage size. */}
