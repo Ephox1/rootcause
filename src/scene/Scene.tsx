@@ -185,7 +185,9 @@ export function Scene({
   // Tree displays in front of background, slightly right of center.
   const treeSize = compact ? 360 : focusTree ? 620 : 540;
   // Character anchored bottom-LEFT to match the painted desk position.
-  const charSize = compact ? 550 : 900;
+  // Sized to match the visual scale of the painted scene (similar footprint
+  // to the title-screen character) without dominating the viewport.
+  const charSize = compact ? 420 : 500;
 
   return (
     <div
@@ -332,7 +334,10 @@ export function Scene({
         <div
           style={{
             position: 'absolute',
-            left: '45%',
+            // Bug Hunt sits slightly further left so the plant mound stays
+            // clearly visible to the right of the desk; Type Race uses the
+            // tighter 45% anchor that's already validated.
+            left: compact ? '45%' : '42%',
             bottom: compact ? '-3%' : '-5%',
             width: charSize,
             transform: 'translateX(-85%)',

@@ -218,11 +218,24 @@ export function TypeRaceScreen() {
                 style={{
                   color,
                   background: bg,
-                  borderLeft: isCursor ? '2px solid var(--accent)' : '2px solid transparent',
-                  animation: isCursor ? 'rc-cursor 1s steps(2) infinite' : 'none',
-                  paddingLeft: isCursor ? 1 : 0,
+                  position: 'relative',
                 }}
               >
+                {isCursor && (
+                  <span
+                    aria-hidden
+                    style={{
+                      position: 'absolute',
+                      left: -1,
+                      top: 0,
+                      bottom: 0,
+                      width: 2,
+                      background: 'var(--accent)',
+                      animation: 'rc-cursor 1s steps(2) infinite',
+                      pointerEvents: 'none',
+                    }}
+                  />
+                )}
                 {ch === ' ' && typed !== undefined && typed !== ' ' ? '·' : ch}
               </span>
             );
