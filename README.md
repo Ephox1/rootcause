@@ -2,12 +2,17 @@
 
 **[▶ Play it live at ephox1.github.io/rootcause](https://ephox1.github.io/rootcause/)**
 
+![Root Cause title screen](docs/screenshots/title-night.png)
+
 A browser-based debugging and typing-practice game for developers.
 Spot the bug, race through real code, grow your tree.
 
 **Two modes.**
-- _Find the Bug_ - multi-choice "what's wrong with this code?" with explanations.
-- _Type Race_ - type real code idioms with live WPM, accuracy, and an error counter.
+
+| Find the Bug | Type Race |
+|:---:|:---:|
+| ![Find the Bug screen with explanation modal](docs/screenshots/bughunt.png) | ![Type Race screen with full pixel keyboard](docs/screenshots/typerace.png) |
+| Multi-choice "what's wrong with this code?" with explanations. | Type real code idioms with live WPM, accuracy, and an error counter. |
 
 **Four languages.** JavaScript, TypeScript, Python, Dart - each with a "general bugs" pool and a "vibe code" pool of AI-generated pitfalls (hallucinated APIs, plausible-but-wrong logic, outdated syntax).
 
