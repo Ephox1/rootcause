@@ -9,34 +9,34 @@ const FRAME_MS = 140;
 const DRINK_FRAME_MS = 200;
 
 const SEQUENCES: Record<CharacterState, readonly string[]> = {
-  idle: ['/sprites/character/idle.png'],
+  idle: ['sprites/character/idle.png'],
   thumbsup: [
-    '/sprites/character/thumbsup-1.png',
-    '/sprites/character/thumbsup-2.png',
-    '/sprites/character/thumbsup-3.png',
+    'sprites/character/thumbsup-1.png',
+    'sprites/character/thumbsup-2.png',
+    'sprites/character/thumbsup-3.png',
   ],
   facepalm: [
-    '/sprites/character/wrong-1.png',
-    '/sprites/character/wrong-2.png',
-    '/sprites/character/wrong-3.png',
-    '/sprites/character/wrong-4.png',
-    '/sprites/character/wrong-5.png',
+    'sprites/character/wrong-1.png',
+    'sprites/character/wrong-2.png',
+    'sprites/character/wrong-3.png',
+    'sprites/character/wrong-4.png',
+    'sprites/character/wrong-5.png',
   ],
-  sunglasses: ['/sprites/character/streak.png'],
-  fistpump: ['/sprites/character/streak.png'],
+  sunglasses: ['sprites/character/streak.png'],
+  fistpump: ['sprites/character/streak.png'],
 };
 
 // Full coffee-sip cycle — frames go forward to the mug-at-lips pose and back.
 const DRINK_FRAMES: readonly string[] = [
-  '/sprites/character/drink-1.png',
-  '/sprites/character/drink-2.png',
-  '/sprites/character/drink-3.png',
-  '/sprites/character/drink-4.png',
-  '/sprites/character/drink-5.png',
-  '/sprites/character/drink-4.png',
-  '/sprites/character/drink-3.png',
-  '/sprites/character/drink-2.png',
-  '/sprites/character/drink-1.png',
+  'sprites/character/drink-1.png',
+  'sprites/character/drink-2.png',
+  'sprites/character/drink-3.png',
+  'sprites/character/drink-4.png',
+  'sprites/character/drink-5.png',
+  'sprites/character/drink-4.png',
+  'sprites/character/drink-3.png',
+  'sprites/character/drink-2.png',
+  'sprites/character/drink-1.png',
 ];
 
 interface CharacterAnimProps {

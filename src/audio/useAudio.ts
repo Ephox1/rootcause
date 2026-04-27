@@ -8,9 +8,9 @@ import { sfxBugCrawl, sfxBugScatter, sfxBugSquash } from './sfx';
 // bughunt and typerace get their own; endrun mirrors whichever mode just
 // finished so the music doesn't switch on the summary screen.
 const EXTERNAL_TRACKS = {
-  title: '/audio/music-title.mp3',
-  bughunt: '/audio/music-bughunt.mp3',
-  typerace: '/audio/music-typerace.mp3',
+  title: 'audio/music-title.mp3',
+  bughunt: 'audio/music-bughunt.mp3',
+  typerace: 'audio/music-typerace.mp3',
 } as const;
 
 /**
@@ -113,19 +113,19 @@ export function useAudio(): void {
     lastFlashTypeRef.current = flashType;
 
     if (flashType === 'correct') {
-      playSoundFile('/audio/sfx-correct.mp3', sfxVolume);
+      playSoundFile('audio/sfx-correct.mp3', sfxVolume);
       window.setTimeout(() => sfxBugScatter(), 80);
       // Squash any stuck bug from the previous wrong answer.
       if (previousFlash === 'wrong') {
         window.setTimeout(() => sfxBugSquash(), 180);
       }
     } else if (flashType === 'wrong') {
-      playSoundFile('/audio/sfx-wrong.mp3', sfxVolume);
+      playSoundFile('audio/sfx-wrong.mp3', sfxVolume);
       // Alternate between two leaf-fall takes so it stays varied.
       const leafSrc =
         leafFallIdxRef.current % 2 === 0
-          ? '/audio/sfx-leaf-fall-1.mp3'
-          : '/audio/sfx-leaf-fall-2.mp3';
+          ? 'audio/sfx-leaf-fall-1.mp3'
+          : 'audio/sfx-leaf-fall-2.mp3';
       leafFallIdxRef.current += 1;
       playSoundFile(leafSrc, sfxVolume);
       window.setTimeout(() => sfxBugCrawl(), 500);
@@ -138,9 +138,9 @@ export function useAudio(): void {
     const prev = lastStreakRef.current;
     lastStreakRef.current = streak;
     if (streak === prev) return;
-    if (streak >= 15 && prev < 15) playSoundFile('/audio/sfx-streak15.mp3', sfxVolume);
-    else if (streak >= 5 && prev < 5) playSoundFile('/audio/sfx-streak5.mp3', sfxVolume);
-    else if (streak === 4 && prev < 4) playSoundFile('/audio/sfx-streak4.mp3', sfxVolume);
+    if (streak >= 15 && prev < 15) playSoundFile('audio/sfx-streak15.mp3', sfxVolume);
+    else if (streak >= 5 && prev < 5) playSoundFile('audio/sfx-streak5.mp3', sfxVolume);
+    else if (streak === 4 && prev < 4) playSoundFile('audio/sfx-streak4.mp3', sfxVolume);
   }, [streak, sfx, sfxVolume]);
 
   // Tree growth chime fires whenever visualStage advances, so audio tracks
@@ -150,7 +150,7 @@ export function useAudio(): void {
     const prev = lastVisualStageRef.current;
     lastVisualStageRef.current = visualStage;
     if (visualStage > prev) {
-      playSoundFile('/audio/sfx-tree-grow.mp3', sfxVolume);
+      playSoundFile('audio/sfx-tree-grow.mp3', sfxVolume);
     }
   }, [visualStage, sfx, sfxVolume]);
 }

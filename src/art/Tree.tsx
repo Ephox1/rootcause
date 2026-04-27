@@ -19,7 +19,7 @@ export function Tree({ stage = 5, variant = 'green', size = 256, style }: TreePr
   const stageForPng = Math.max(0, Math.min(14, stage));
   return (
     <img
-      src={`/sprites/tree-${variant}-${stageForPng}.png`}
+      src={`sprites/tree-${variant}-${stageForPng}.png`}
       alt={`${variant} tree stage ${stageForPng}`}
       width={size}
       height={size}

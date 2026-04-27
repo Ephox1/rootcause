@@ -179,7 +179,7 @@ export function Scene({
   }, [flashKey, flashType, reducedMotion, difficulty]);
 
   const isDark = theme === 'dark';
-  const bgSrc = isDark ? '/sprites/bg-night.png' : '/sprites/bg-day.png';
+  const bgSrc = isDark ? 'sprites/bg-night.png' : 'sprites/bg-day.png';
   const { w: stageW, h: stageH } = useStageSize(STAGE_RATIO);
 
   // Tree displays in front of background, slightly right of center.

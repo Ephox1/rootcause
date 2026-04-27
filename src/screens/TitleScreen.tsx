@@ -13,17 +13,17 @@ const STAGE_RATIO = 16 / 9;
 // Frames go forward to mug-at-lips and back, total ~2s. Idle gap is randomised
 // so it doesn't feel mechanical.
 const DRINK_FRAMES: readonly string[] = [
-  '/sprites/character/drink-1.png',
-  '/sprites/character/drink-2.png',
-  '/sprites/character/drink-3.png',
-  '/sprites/character/drink-4.png',
-  '/sprites/character/drink-5.png',
-  '/sprites/character/drink-4.png',
-  '/sprites/character/drink-3.png',
-  '/sprites/character/drink-2.png',
-  '/sprites/character/drink-1.png',
+  'sprites/character/drink-1.png',
+  'sprites/character/drink-2.png',
+  'sprites/character/drink-3.png',
+  'sprites/character/drink-4.png',
+  'sprites/character/drink-5.png',
+  'sprites/character/drink-4.png',
+  'sprites/character/drink-3.png',
+  'sprites/character/drink-2.png',
+  'sprites/character/drink-1.png',
 ];
-const IDLE_FRAME = '/sprites/character/idle.png';
+const IDLE_FRAME = 'sprites/character/idle.png';
 const DRINK_FRAME_MS = 200;
 const IDLE_GAP_MIN_MS = 22_000;
 const IDLE_GAP_MAX_MS = 42_000;
@@ -125,8 +125,8 @@ export function TitleScreen(): JSX.Element {
   const charSrc = useTitleCharFrame();
 
   const isDark = theme === 'dark';
-  const bgSrc = isDark ? '/sprites/bg-night.png' : '/sprites/bg-day.png';
-  const titleSrc = isDark ? '/sprites/title/title-dark.png' : '/sprites/title/title-light.png';
+  const bgSrc = isDark ? 'sprites/bg-night.png' : 'sprites/bg-day.png';
+  const titleSrc = isDark ? 'sprites/title/title-dark.png' : 'sprites/title/title-light.png';
   const themeSuffix = isDark ? 'dark' : 'light';
 
   const handlers: Record<ButtonDef['key'], () => void> = {
@@ -391,7 +391,7 @@ interface TitleButtonProps {
 function TitleButton({ asset, themeSuffix, label, onClick, buttonRef }: TitleButtonProps): JSX.Element {
   const [hover, setHover] = useState(false);
   const variant = hover ? 'selected' : themeSuffix;
-  const src = `/sprites/title/btn-${asset}-${variant}.png`;
+  const src = `sprites/title/btn-${asset}-${variant}.png`;
   return (
     <button
       ref={buttonRef}

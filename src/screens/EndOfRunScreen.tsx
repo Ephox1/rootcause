@@ -41,7 +41,7 @@ export function EndOfRunScreen(): JSX.Element {
     if (playedRef.current) return;
     playedRef.current = true;
     if (failed && state.sfx) {
-      playSoundFile('/audio/sfx-fail.mp3', state.sfxVolume);
+      playSoundFile('audio/sfx-fail.mp3', state.sfxVolume);
     }
   }, [failed, state.sfx, state.sfxVolume]);
 
