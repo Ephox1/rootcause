@@ -20,7 +20,6 @@ import {
   sfxRustle,
   sfxStreak5,
   sfxStreak15,
-  sfxTreeGrow,
 } from './sfx';
 
 /**
@@ -40,12 +39,14 @@ export function useAudio(): void {
   const flashKey = useGameStore((s) => s.flashKey);
   const flashType = useGameStore((s) => s.flashType);
   const streak = useGameStore((s) => s.streak);
+  const visualStage = useGameStore((s) => s.visualStage);
   const difficulty = useGameStore((s) => s.difficulty);
 
   const unlockedRef = useRef(false);
   const lastFlashRef = useRef<number | null>(null);
   const lastFlashTypeRef = useRef<'correct' | 'wrong' | null>(null);
   const lastStreakRef = useRef(streak);
+  const lastVisualStageRef = useRef(visualStage);
   const currentTrackRef = useRef<string | null>(null);
   const typeRaceTrackRef = useRef<string | null>(null);
 
@@ -175,7 +176,7 @@ export function useAudio(): void {
 
   // Streak milestone chimes — only one fires per correct answer.
   // Priority order (highest → lowest):
-  //   15+ chiptune fanfare → 5+ chiptune fanfare → 4-streak MP3 → tree-grow
+  //   15+ chiptune fanfare → 5+ chiptune fanfare → 4-streak MP3
   useEffect(() => {
     if (!sfx || !unlockedRef.current) return;
     const prev = lastStreakRef.current;
@@ -184,7 +185,17 @@ export function useAudio(): void {
     if (streak >= 15 && prev < 15) sfxStreak15();
     else if (streak >= 5 && prev < 5) sfxStreak5();
     else if (streak === 4 && prev < 4) playSoundFile('/audio/sfx-streak4.mp3', sfxVolume);
-    // Tree-grow chime every 3 correct in a row (covers 3, 6, 9, 12, …)
-    else if (streak > 0 && streak % 3 === 0 && streak > prev) sfxTreeGrow();
   }, [streak, sfx, sfxVolume]);
+
+  // Tree growth — plays whenever visualStage advances. The chime now
+  // tracks the actual visible tree-stage transition rather than a
+  // heuristic "every 3 correct" rule, so the audio matches the art.
+  useEffect(() => {
+    if (!sfx || !unlockedRef.current) return;
+    const prev = lastVisualStageRef.current;
+    lastVisualStageRef.current = visualStage;
+    if (visualStage > prev) {
+      playSoundFile('/audio/sfx-tree-grow.mp3', sfxVolume);
+    }
+  }, [visualStage, sfx, sfxVolume]);
 }
