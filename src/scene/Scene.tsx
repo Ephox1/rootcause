@@ -182,14 +182,16 @@ export function Scene({
   const bgSrc = isDark ? 'sprites/bg-night.png' : 'sprites/bg-day.png';
   const { w: stageW, h: stageH } = useStageSize(STAGE_RATIO);
 
-  // Tree displays in front of background, slightly right of center. Scaled
-  // down from earlier sizing so the dirt mound on early-stage sprites
-  // doesn't dwarf the desk + character.
-  const treeSize = compact ? 360 : focusTree ? 540 : 380;
-  // Character anchored bottom-LEFT to match the painted desk position.
-  // Sized to match the visual scale of the painted scene (similar footprint
-  // to the title-screen character) without dominating the viewport.
-  const charSize = compact ? 420 : 500;
+  // Tree size: Bug Hunt + end-of-run scale with stageH so the painted-scene
+  // proportions stay consistent across viewport sizes. Type Race (compact)
+  // stays at the fixed validated size so the typing UI keeps its existing
+  // balance.
+  const treeSize = compact
+    ? 360
+    : Math.round(stageH * (focusTree ? 0.5 : 0.35));
+  // Character size: same approach. Bug Hunt scales; Type Race stays fixed
+  // so the desk silhouette next to the keyboard keeps its tested look.
+  const charSize = compact ? 420 : Math.round(stageH * 0.46);
 
   return (
     <div
