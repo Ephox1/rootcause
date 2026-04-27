@@ -6,7 +6,7 @@ import { BugIcon, FlameIcon, KeyboardIcon, StarIcon } from '../components/icons'
 import { useGameStore } from '../store/useGameStore';
 import { playSoundFile } from '../audio/musicPlayer';
 
-// Fail thresholds — playing below these triggers the "rough run" branch:
+// Fail thresholds - playing below these triggers the "rough run" branch:
 //   - Bug Hunt: fewer than half the questions answered correctly
 //   - Type Race: average WPM below 25 (tweak as you see fit)
 const FAIL_WPM_THRESHOLD = 25;

@@ -93,7 +93,7 @@ button:focus:not(:focus-visible) {
   font-family: 'VT323', monospace;
 }
 
-/* ——— scrollbar ——— */
+/* --- scrollbar --- */
 ::-webkit-scrollbar {
   width: 10px;
   height: 10px;
@@ -109,7 +109,7 @@ button:focus:not(:focus-visible) {
   background: var(--text-dim);
 }
 
-/* ——— scene animations ——— */
+/* --- scene animations --- */
 @keyframes rc-twinkle {
   0%, 100% { opacity: 0.35; }
   50% { opacity: 1; }
@@ -186,7 +186,7 @@ button:focus:not(:focus-visible) {
   }
 }
 
-/* ——— CRT overlay ——— */
+/* --- CRT overlay --- */
 .crt-overlay {
   position: fixed;
   inset: 0;

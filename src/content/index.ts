@@ -60,7 +60,7 @@ export interface PickParams {
 /**
  * Pick `count` questions for a run.
  *
- * No repeats within a single shuffle pass — if the pool is large enough we
+ * No repeats within a single shuffle pass - if the pool is large enough we
  * just take the first `count` from one shuffle. If the pool is smaller than
  * `count`, we keep reshuffling and concatenating, but ensure the last item
  * of the previous batch never lands first in the next batch (so a question

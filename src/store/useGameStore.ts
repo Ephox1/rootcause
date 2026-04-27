@@ -18,7 +18,7 @@ import type {
 import { pickQuestions, pickSnippets } from '../content';
 
 // Run length matches the difficulty's tree-growth threshold so a perfect run
-// always reaches full bloom at every difficulty — harder just means a longer
+// always reaches full bloom at every difficulty - harder just means a longer
 // challenge with the same triumphant payoff.
 const BUG_HUNT_RUN_LENGTH: Record<Difficulty, number> = { easy: 5, medium: 10, hard: 15 };
 const TYPE_RACE_RUN_LENGTH = 5;
@@ -48,7 +48,7 @@ function clamp(value: number, min: number, max: number): number {
 }
 
 function variantForStreak(_streak: number): TreeVariant {
-  // Seasonal variants are disabled — the green-tree progression now covers
+  // Seasonal variants are disabled - the green-tree progression now covers
   // all 15 growth stages via tree-green-{0..14}.png (final stage is the
   // apple tree). Restore the streak thresholds here when seasonal art lands.
   return 'green';

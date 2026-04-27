@@ -26,7 +26,7 @@ const SEQUENCES: Record<CharacterState, readonly string[]> = {
   fistpump: ['sprites/character/streak.png'],
 };
 
-// Full coffee-sip cycle — frames go forward to the mug-at-lips pose and back.
+// Full coffee-sip cycle - frames go forward to the mug-at-lips pose and back.
 const DRINK_FRAMES: readonly string[] = [
   'sprites/character/drink-1.png',
   'sprites/character/drink-2.png',
@@ -57,7 +57,7 @@ export function CharacterAnim({ state, size = 256, style, drinkIntervalMs }: Cha
   const [drinkSrc, setDrinkSrc] = useState<string | null>(null);
   const timerRef = useRef<number | null>(null);
 
-  // State-driven animation — reset and step through whenever state changes.
+  // State-driven animation - reset and step through whenever state changes.
   useEffect(() => {
     if (timerRef.current !== null) {
       window.clearInterval(timerRef.current);

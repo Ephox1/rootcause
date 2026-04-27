@@ -2,7 +2,7 @@ import { engine } from './ChiptuneEngine';
 
 /**
  * Short SFX synthesized on the fly. Layered with the real-recording MP3 SFX
- * (correct/wrong/streak/leaf-fall/tree-grow/fail) — these chiptune blips
+ * (correct/wrong/streak/leaf-fall/tree-grow/fail) - these chiptune blips
  * cover the ambient creature/foliage textures and the typing keypress click.
  */
 
@@ -20,7 +20,7 @@ export function sfxKeypress(): void {
 }
 
 /**
- * Bugs scattering — 3-6 rapid chirps at scattered pitches. Layered after
+ * Bugs scattering - 3-6 rapid chirps at scattered pitches. Layered after
  * the real correct-answer MP3 to match the visual bug-scatter particles.
  */
 export function sfxBugScatter(): void {
@@ -36,7 +36,7 @@ export function sfxBugScatter(): void {
 }
 
 /**
- * A single bug skittering — tiny rhythmic noise clicks, like six tiny feet
+ * A single bug skittering - tiny rhythmic noise clicks, like six tiny feet
  * tapping bark. Fires when a bug lands on the tree after a wrong answer.
  */
 export function sfxBugCrawl(): void {
@@ -49,7 +49,7 @@ export function sfxBugCrawl(): void {
 }
 
 /**
- * Bug squash — short low crunch when the next correct answer clears a stuck
+ * Bug squash - short low crunch when the next correct answer clears a stuck
  * bug from the tree.
  */
 export function sfxBugSquash(): void {

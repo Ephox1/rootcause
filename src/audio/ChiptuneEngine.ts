@@ -2,10 +2,10 @@
  * Chiptune synth engine modelled after the NES PSG (Ricoh 2A03).
  *
  * Four channels:
- *   pulse1   — square wave with selectable duty cycle (12.5 / 25 / 50 / 75%)
- *   pulse2   — second pulse channel for harmonies
- *   triangle — triangle wave (bass)
- *   noise    — filtered white noise (drums / hi-hat)
+ *   pulse1   - square wave with selectable duty cycle (12.5 / 25 / 50 / 75%)
+ *   pulse2   - second pulse channel for harmonies
+ *   triangle - triangle wave (bass)
+ *   noise    - filtered white noise (drums / hi-hat)
  *
  * Volume is set via a per-note envelope (attack / hold / decay). A master gain
  * node sits in front of destination so the volume slider and mute work.

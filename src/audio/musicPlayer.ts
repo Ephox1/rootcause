@@ -2,11 +2,11 @@
 
 /**
  * Music player backed by a single HTMLAudioElement. Switching tracks just
- * changes the element's src — there is literally only one element so two
+ * changes the element's src - there is literally only one element so two
  * tracks can never play at once. Restarts each track from the beginning
  * (no resume from pause), which the project prefers for clean transitions.
  *
- * Sits alongside the synthesized ChiptuneEngine — engine still drives short
+ * Sits alongside the synthesized ChiptuneEngine - engine still drives short
  * SFX, this just handles the looping pre-recorded music tracks.
  *
  * Browsers block autoplay until the user interacts with the page; the
@@ -43,7 +43,7 @@ class MusicPlayer {
     a.volume = this.muted ? 0 : volume;
     if (a.paused) {
       void a.play().catch(() => {
-        // Autoplay blocked — caller will retry after first interaction.
+        // Autoplay blocked - caller will retry after first interaction.
       });
     }
   }
@@ -97,6 +97,6 @@ export function playSoundFile(src: string, volume = 1): void {
   a.volume = Math.max(0, Math.min(1, volume));
   a.preload = 'auto';
   void a.play().catch(() => {
-    // Autoplay may be blocked until first interaction — silently ignore.
+    // Autoplay may be blocked until first interaction - silently ignore.
   });
 }

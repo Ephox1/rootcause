@@ -92,13 +92,13 @@
     "prompt": "What does data[2:5] return?",
     "code": "data = list(range(10))\nprint(data[2:5])",
     "choices": [
-      { "id": "a", "text": "[2, 3, 4] — slice end is exclusive" },
-      { "id": "b", "text": "[2, 3, 4, 5] — slice end is inclusive" },
-      { "id": "c", "text": "[3, 4, 5] — slice start is exclusive" },
+      { "id": "a", "text": "[2, 3, 4] - slice end is exclusive" },
+      { "id": "b", "text": "[2, 3, 4, 5] - slice end is inclusive" },
+      { "id": "c", "text": "[3, 4, 5] - slice start is exclusive" },
       { "id": "d", "text": "IndexError" }
     ],
     "correctChoiceId": "a",
-    "explanation": "Python slicing is [start:end) — the end index is exclusive. To drop first and last use [1:-1]. To include the element at index 5, write data[2:6].",
+    "explanation": "Python slicing is [start:end) - the end index is exclusive. To drop first and last use [1:-1]. To include the element at index 5, write data[2:6].",
     "tags": ["slicing", "off-by-one"]
   },
   {
@@ -109,8 +109,8 @@
     "prompt": "What does this print?",
     "code": "a = 0.1 + 0.2\nif a == 0.3:\n    print(\"equal\")\nelse:\n    print(\"not equal\")",
     "choices": [
-      { "id": "a", "text": "equal — 0.1 + 0.2 is exactly 0.3" },
-      { "id": "b", "text": "not equal — IEEE 754 rounding makes the sum 0.30000000000000004" },
+      { "id": "a", "text": "equal - 0.1 + 0.2 is exactly 0.3" },
+      { "id": "b", "text": "not equal - IEEE 754 rounding makes the sum 0.30000000000000004" },
       { "id": "c", "text": "SyntaxError" },
       { "id": "d", "text": "Raises a warning and prints equal" }
     ],
@@ -211,7 +211,7 @@
     "prompt": "What does this raise in Python 3.12+?",
     "code": "from datetime import datetime, timezone\nnaive = datetime(2026, 4, 24, 12, 0)\naware = datetime(2026, 4, 24, 12, 0, tzinfo=timezone.utc)\nprint(naive < aware)",
     "choices": [
-      { "id": "a", "text": "Prints True — both represent the same instant" },
+      { "id": "a", "text": "Prints True - both represent the same instant" },
       { "id": "b", "text": "Prints False silently" },
       { "id": "c", "text": "TypeError: can't compare offset-naive and offset-aware datetimes" },
       { "id": "d", "text": "ValueError on the comparison" }
@@ -245,8 +245,8 @@
     "prompt": "What does d[Point(1, 2)] raise?",
     "code": "class Point:\n    def __init__(self, x, y):\n        self.x, self.y = x, y\n    def __eq__(self, other):\n        return (self.x, self.y) == (other.x, other.y)\n\np1 = Point(1, 2)\nd = {p1: \"origin\"}\nprint(d[Point(1, 2)])",
     "choices": [
-      { "id": "a", "text": "'origin' — __eq__ handles the lookup" },
-      { "id": "b", "text": "KeyError — the hash of the new Point differs from p1" },
+      { "id": "a", "text": "'origin' - __eq__ handles the lookup" },
+      { "id": "b", "text": "KeyError - the hash of the new Point differs from p1" },
       { "id": "c", "text": "TypeError: unhashable type: 'Point'" },
       { "id": "d", "text": "Prints None" }
     ],
@@ -279,7 +279,7 @@
     "prompt": "What does this print?",
     "code": "print(any([]))\nprint(all([]))",
     "choices": [
-      { "id": "a", "text": "False then True — vacuously false, vacuously true" },
+      { "id": "a", "text": "False then True - vacuously false, vacuously true" },
       { "id": "b", "text": "False then False" },
       { "id": "c", "text": "True then True" },
       { "id": "d", "text": "TypeError on empty iterable" }
@@ -299,7 +299,7 @@
       { "id": "a", "text": "True then False" },
       { "id": "b", "text": "True then True" },
       { "id": "c", "text": "False then False" },
-      { "id": "d", "text": "SyntaxError — chained comparisons require parentheses" }
+      { "id": "d", "text": "SyntaxError - chained comparisons require parentheses" }
     ],
     "correctChoiceId": "a",
     "explanation": "1 < a < 10 is (1 < a) and (a < 10) with a evaluated once. 1 < a > 10 is (1 < a) and (a > 10) which is True and False = False. Great for range checks, easy to misread.",
@@ -314,12 +314,12 @@
     "code": "a = [1, 2, 3]\nb = [1, 2, 3]\nprint(a == b)\nprint(a is b)",
     "choices": [
       { "id": "a", "text": "True then True" },
-      { "id": "b", "text": "True then False — equal contents, different objects" },
+      { "id": "b", "text": "True then False - equal contents, different objects" },
       { "id": "c", "text": "False then True" },
       { "id": "d", "text": "False then False" }
     ],
     "correctChoiceId": "b",
-    "explanation": "== compares values, 'is' compares identity. Each list literal creates a new object. Use 'is' only for sentinels (None, True, False) — never for content equality.",
+    "explanation": "== compares values, 'is' compares identity. Each list literal creates a new object. Use 'is' only for sentinels (None, True, False) - never for content equality.",
     "tags": ["identity-vs-equality", "list"]
   },
   {
@@ -331,7 +331,7 @@
     "code": "nums = [3, 1, 2]\nresult = nums.sort()\nprint(result)\nprint(sorted(nums))",
     "choices": [
       { "id": "a", "text": "[1, 2, 3] then [1, 2, 3]" },
-      { "id": "b", "text": "None then [1, 2, 3] — list.sort() mutates in place and returns None" },
+      { "id": "b", "text": "None then [1, 2, 3] - list.sort() mutates in place and returns None" },
       { "id": "c", "text": "[3, 1, 2] then [1, 2, 3]" },
       { "id": "d", "text": "TypeError on the sort" }
     ],
@@ -347,9 +347,9 @@
     "prompt": "What does this print?",
     "code": "class A:\n    def greet(self): return \"A\"\nclass B(A):\n    def greet(self): return \"B\" + super().greet()\nclass C(A):\n    def greet(self): return \"C\" + super().greet()\nclass D(B, C):\n    def greet(self): return \"D\" + super().greet()\n\nprint(D().greet())",
     "choices": [
-      { "id": "a", "text": "'DBCA' — super() follows the C3 linearization MRO" },
-      { "id": "b", "text": "'DBA' — the diamond skips C" },
-      { "id": "c", "text": "'DCA' — C3 visits C before B" },
+      { "id": "a", "text": "'DBCA' - super() follows the C3 linearization MRO" },
+      { "id": "b", "text": "'DBA' - the diamond skips C" },
+      { "id": "c", "text": "'DCA' - C3 visits C before B" },
       { "id": "d", "text": "AttributeError on super().greet()" }
     ],
     "correctChoiceId": "a",
@@ -381,9 +381,9 @@
     "prompt": "What's the problem here?",
     "code": "from dataclasses import dataclass\n\n@dataclass\nclass User:\n    tags: list = []\n\nu1 = User()\nu1.tags.append(\"admin\")\nu2 = User()\nprint(u2.tags)",
     "choices": [
-      { "id": "a", "text": "Prints [] — each instance has its own list" },
+      { "id": "a", "text": "Prints [] - each instance has its own list" },
       { "id": "b", "text": "ValueError at class definition: mutable default not allowed" },
-      { "id": "c", "text": "Prints ['admin'] — same shared default" },
+      { "id": "c", "text": "Prints ['admin'] - same shared default" },
       { "id": "d", "text": "Prints None" }
     ],
     "correctChoiceId": "b",
@@ -398,7 +398,7 @@
     "prompt": "What does this raise?",
     "code": "import json\nfrom datetime import datetime\n\nd = {\"dt\": datetime.now()}\nprint(json.dumps(d))",
     "choices": [
-      { "id": "a", "text": "Prints {'dt': '2026-...'} — datetime serializes as ISO" },
+      { "id": "a", "text": "Prints {'dt': '2026-...'} - datetime serializes as ISO" },
       { "id": "b", "text": "TypeError: Object of type datetime is not JSON serializable" },
       { "id": "c", "text": "Raises a DeprecationWarning" },
       { "id": "d", "text": "Prints {'dt': null}" }
@@ -415,8 +415,8 @@
     "prompt": "What does this print?",
     "code": "from enum import Enum\n\nclass Color(Enum):\n    RED = \"red\"\n\nprint(Color.RED == \"red\")",
     "choices": [
-      { "id": "a", "text": "True — Enum compares to its value" },
-      { "id": "b", "text": "False — Enum members are not equal to their raw values" },
+      { "id": "a", "text": "True - Enum compares to its value" },
+      { "id": "b", "text": "False - Enum members are not equal to their raw values" },
       { "id": "c", "text": "TypeError" },
       { "id": "d", "text": "Prints 'red'" }
     ],
@@ -483,9 +483,9 @@
     "prompt": "What does this print?",
     "code": "print(round(2.5))\nprint(round(3.5))",
     "choices": [
-      { "id": "a", "text": "3 then 4 — schoolbook rounding" },
-      { "id": "b", "text": "2 then 4 — banker's rounding (half to even)" },
-      { "id": "c", "text": "2 then 3 — floor rounding" },
+      { "id": "a", "text": "3 then 4 - schoolbook rounding" },
+      { "id": "b", "text": "2 then 4 - banker's rounding (half to even)" },
+      { "id": "c", "text": "2 then 3 - floor rounding" },
       { "id": "d", "text": "3 then 3" }
     ],
     "correctChoiceId": "b",
@@ -534,7 +534,7 @@
     "prompt": "What does this print?",
     "code": "from collections import defaultdict\n\nd = defaultdict(int)\nprint(d[\"missing\"])",
     "choices": [
-      { "id": "a", "text": "0 — defaultdict creates missing keys via the factory" },
+      { "id": "a", "text": "0 - defaultdict creates missing keys via the factory" },
       { "id": "b", "text": "KeyError" },
       { "id": "c", "text": "None" },
       { "id": "d", "text": "TypeError: int() missing argument" }
@@ -551,8 +551,8 @@
     "prompt": "What does this print in Python 3.14?",
     "code": "name = \"world\"\ntemplate = t\"Hello {name}\"\nprint(template)",
     "choices": [
-      { "id": "a", "text": "'Hello world' — t-strings interpolate like f-strings" },
-      { "id": "b", "text": "A Template object repr — t-strings produce string.templatelib.Template, not a str" },
+      { "id": "a", "text": "'Hello world' - t-strings interpolate like f-strings" },
+      { "id": "b", "text": "A Template object repr - t-strings produce string.templatelib.Template, not a str" },
       { "id": "c", "text": "SyntaxError on the t prefix" },
       { "id": "d", "text": "NameError: t is not defined" }
     ],
@@ -568,8 +568,8 @@
     "prompt": "What does this return in Python 3.14?",
     "code": "def func(x: list[int]) -> int:\n    return sum(x)\n\nprint(func.__annotations__)",
     "choices": [
-      { "id": "a", "text": "{'x': list[int], 'return': int} — annotations evaluate to real type objects under PEP 649" },
-      { "id": "b", "text": "{'x': 'list[int]', 'return': 'int'} — annotations are strings by default" },
+      { "id": "a", "text": "{'x': list[int], 'return': int} - annotations evaluate to real type objects under PEP 649" },
+      { "id": "b", "text": "{'x': 'list[int]', 'return': 'int'} - annotations are strings by default" },
       { "id": "c", "text": "Raises NameError because list[int] is a forward reference" },
       { "id": "d", "text": "Empty dict" }
     ],
@@ -586,8 +586,8 @@
     "code": "value = [1, 2, 3]\nmatch value:\n    case [1, 2, x]:\n        print(f\"matched {x}\")\n    case _:\n        print(\"no match\")",
     "choices": [
       { "id": "a", "text": "matched 3" },
-      { "id": "b", "text": "no match — list patterns require tuple syntax" },
-      { "id": "c", "text": "SyntaxError — match is not valid Python" },
+      { "id": "b", "text": "no match - list patterns require tuple syntax" },
+      { "id": "c", "text": "SyntaxError - match is not valid Python" },
       { "id": "d", "text": "matched [1, 2, 3]" }
     ],
     "correctChoiceId": "a",
@@ -602,9 +602,9 @@
     "prompt": "Which copy is safe here?",
     "code": "import copy\nnested = [[1, 2], [3, 4]]\nshallow = copy.copy(nested)\nshallow[0][0] = 99\nprint(nested)",
     "choices": [
-      { "id": "a", "text": "[[99, 2], [3, 4]] — shallow copy shares inner lists" },
-      { "id": "b", "text": "[[1, 2], [3, 4]] — copy.copy deep-copies lists" },
-      { "id": "c", "text": "Error — copy.copy rejects nested lists" },
+      { "id": "a", "text": "[[99, 2], [3, 4]] - shallow copy shares inner lists" },
+      { "id": "b", "text": "[[1, 2], [3, 4]] - copy.copy deep-copies lists" },
+      { "id": "c", "text": "Error - copy.copy rejects nested lists" },
       { "id": "d", "text": "[[1, 2], [3, 4]] only in Python 3.14" }
     ],
     "correctChoiceId": "a",
@@ -619,13 +619,13 @@
     "prompt": "What does this print?",
     "code": "print(bool(\"False\"))\nprint(bool(\"\"))\nprint(bool(0))",
     "choices": [
-      { "id": "a", "text": "False, False, False — the string 'False' looks falsy" },
-      { "id": "b", "text": "True, False, False — any non-empty string is truthy" },
+      { "id": "a", "text": "False, False, False - the string 'False' looks falsy" },
+      { "id": "b", "text": "True, False, False - any non-empty string is truthy" },
       { "id": "c", "text": "True, True, False" },
       { "id": "d", "text": "False, True, False" }
     ],
     "correctChoiceId": "b",
-    "explanation": "Only empty containers, 0, 0.0, None, and False are falsy. The non-empty string 'False' is truthy. This catches people parsing config or CLI flags — always compare explicitly or use a parser.",
+    "explanation": "Only empty containers, 0, 0.0, None, and False are falsy. The non-empty string 'False' is truthy. This catches people parsing config or CLI flags - always compare explicitly or use a parser.",
     "tags": ["truthiness", "bool-conversion"]
   },
   {
@@ -653,9 +653,9 @@
     "prompt": "What does this print?",
     "code": "t = (1, 2, [3])\nt[2].append(4)\nprint(t)",
     "choices": [
-      { "id": "a", "text": "(1, 2, [3, 4]) — tuple holds a list reference that is still mutable" },
-      { "id": "b", "text": "TypeError — tuples are fully immutable" },
-      { "id": "c", "text": "(1, 2, [3]) — append silently ignored" },
+      { "id": "a", "text": "(1, 2, [3, 4]) - tuple holds a list reference that is still mutable" },
+      { "id": "b", "text": "TypeError - tuples are fully immutable" },
+      { "id": "c", "text": "(1, 2, [3]) - append silently ignored" },
       { "id": "d", "text": "(1, 2, [3], 4)" }
     ],
     "correctChoiceId": "a",
@@ -670,8 +670,8 @@
     "prompt": "What does the walrus-assigned n look like after the if?",
     "code": "if (n := len([1, 2, 3])) > 0:\n    print(n)\nprint(n)",
     "choices": [
-      { "id": "a", "text": "Prints 3 then 3 — walrus binds n in the enclosing scope" },
-      { "id": "b", "text": "Prints 3 then NameError — walrus is scoped to the condition" },
+      { "id": "a", "text": "Prints 3 then 3 - walrus binds n in the enclosing scope" },
+      { "id": "b", "text": "Prints 3 then NameError - walrus is scoped to the condition" },
       { "id": "c", "text": "Prints None then 3" },
       { "id": "d", "text": "SyntaxError: := not allowed in if" }
     ],
@@ -687,9 +687,9 @@
     "prompt": "What does this print?",
     "code": "lst = [1, 2]\nlst.append([3, 4])\nprint(len(lst))",
     "choices": [
-      { "id": "a", "text": "3 — append adds the list as a single element" },
-      { "id": "b", "text": "4 — append flattens the list" },
-      { "id": "c", "text": "2 — append fails on a nested list" },
+      { "id": "a", "text": "3 - append adds the list as a single element" },
+      { "id": "b", "text": "4 - append flattens the list" },
+      { "id": "c", "text": "2 - append fails on a nested list" },
       { "id": "d", "text": "TypeError" }
     ],
     "correctChoiceId": "a",
@@ -704,9 +704,9 @@
     "prompt": "Why does c2.count not print 0?",
     "code": "class Counter:\n    count = []\n    def inc(self):\n        self.count.append(1)\n\nc1 = Counter()\nc2 = Counter()\nc1.inc()\nprint(len(c2.count))",
     "choices": [
-      { "id": "a", "text": "Prints 1 — count is a class attribute shared by all instances" },
-      { "id": "b", "text": "Prints 0 — self.count creates a fresh list per instance" },
-      { "id": "c", "text": "TypeError — list is not allowed as class attribute" },
+      { "id": "a", "text": "Prints 1 - count is a class attribute shared by all instances" },
+      { "id": "b", "text": "Prints 0 - self.count creates a fresh list per instance" },
+      { "id": "c", "text": "TypeError - list is not allowed as class attribute" },
       { "id": "d", "text": "Prints 2" }
     ],
     "correctChoiceId": "a",
@@ -721,13 +721,13 @@
     "prompt": "What's unsafe here?",
     "code": "import pickle\nuntrusted = get_user_data_from_network()\ndata = pickle.loads(untrusted)",
     "choices": [
-      { "id": "a", "text": "pickle is slow — prefer JSON for performance" },
-      { "id": "b", "text": "pickle.loads on untrusted input can execute arbitrary code — use JSON or another safe format" },
+      { "id": "a", "text": "pickle is slow - prefer JSON for performance" },
+      { "id": "b", "text": "pickle.loads on untrusted input can execute arbitrary code - use JSON or another safe format" },
       { "id": "c", "text": "pickle requires Python 3.14" },
       { "id": "d", "text": "loads() must be called on bytes, not str" }
     ],
     "correctChoiceId": "b",
-    "explanation": "Pickle deserialization calls __reduce__ and can instantiate any class or call any callable — crafted payloads can drop shells. Never unpickle untrusted data. Use JSON, MessagePack, or a schema-validated format like Protocol Buffers.",
+    "explanation": "Pickle deserialization calls __reduce__ and can instantiate any class or call any callable - crafted payloads can drop shells. Never unpickle untrusted data. Use JSON, MessagePack, or a schema-validated format like Protocol Buffers.",
     "tags": ["pickle", "security", "deserialization"]
   },
   {
@@ -755,8 +755,8 @@
     "prompt": "What does c.x print?",
     "code": "class Desc:\n    def __get__(self, obj, owner=None):\n        return obj.__dict__.get(\"_value\", 0)\n    def __set__(self, obj, value):\n        obj.__dict__[\"_value\"] = value\n\nclass C:\n    x = Desc()\n\nc = C()\nc.x = 42\nprint(c.x)",
     "choices": [
-      { "id": "a", "text": "42 — descriptor __get__ reads _value from instance __dict__" },
-      { "id": "b", "text": "0 — __set__ stored in _value but __get__ is bypassed" },
+      { "id": "a", "text": "42 - descriptor __get__ reads _value from instance __dict__" },
+      { "id": "b", "text": "0 - __set__ stored in _value but __get__ is bypassed" },
       { "id": "c", "text": "AttributeError: descriptor not found" },
       { "id": "d", "text": "TypeError on __set__" }
     ],
@@ -772,7 +772,7 @@
     "prompt": "What's subtle here?",
     "code": "from functools import lru_cache\n\nclass Calculator:\n    @lru_cache(maxsize=128)\n    def fib(self, n):\n        if n < 2:\n            return n\n        return self.fib(n - 1) + self.fib(n - 2)\n\ncalc = Calculator()\nprint(calc.fib(10))",
     "choices": [
-      { "id": "a", "text": "55 — works correctly" },
+      { "id": "a", "text": "55 - works correctly" },
       { "id": "b", "text": "lru_cache on methods keeps self alive for the cache's lifetime, causing a subtle memory leak per instance" },
       { "id": "c", "text": "TypeError because self is unhashable" },
       { "id": "d", "text": "RecursionError" }
@@ -789,8 +789,8 @@
     "prompt": "What does this print?",
     "code": "import threading\nlocal_data = threading.local()\nlocal_data.value = 42\n\ndef worker():\n    print(getattr(local_data, \"value\", \"not set\"))\n\nt = threading.Thread(target=worker)\nt.start()\nt.join()",
     "choices": [
-      { "id": "a", "text": "42 — thread.local is shared across threads" },
-      { "id": "b", "text": "'not set' — each thread has its own attribute namespace" },
+      { "id": "a", "text": "42 - thread.local is shared across threads" },
+      { "id": "b", "text": "'not set' - each thread has its own attribute namespace" },
       { "id": "c", "text": "AttributeError: value" },
       { "id": "d", "text": "threading.local was removed in Python 3.14" }
     ],
@@ -812,7 +812,7 @@
       { "id": "d", "text": "case statements fall through like switch in C" }
     ],
     "correctChoiceId": "a",
-    "explanation": "The underscore (_) pattern is the wildcard — it matches anything and acts as the default. Python match statements do NOT fall through between cases; each is independent.",
+    "explanation": "The underscore (_) pattern is the wildcard - it matches anything and acts as the default. Python match statements do NOT fall through between cases; each is independent.",
     "tags": ["match-case", "wildcard"]
   },
   {
@@ -823,8 +823,8 @@
     "prompt": "What does this print?",
     "code": "from collections import defaultdict\nd = defaultdict(list)\nd[\"a\"].append(1)\nprint(d[\"b\"])\nprint(dict(d))",
     "choices": [
-      { "id": "a", "text": "Prints [] then {'a': [1]} — accessing d['b'] doesn't create it" },
-      { "id": "b", "text": "Prints [] then {'a': [1], 'b': []} — defaultdict stores the default on access" },
+      { "id": "a", "text": "Prints [] then {'a': [1]} - accessing d['b'] doesn't create it" },
+      { "id": "b", "text": "Prints [] then {'a': [1], 'b': []} - defaultdict stores the default on access" },
       { "id": "c", "text": "KeyError on d['b']" },
       { "id": "d", "text": "None then {'a': [1]}" }
     ],
@@ -840,13 +840,13 @@
     "prompt": "In Python 3.14, what's this doing?",
     "code": "from concurrent import interpreters\ninterp = interpreters.create()\ninterp.exec(\"x = 42\")\nprint(interp.get(\"x\"))",
     "choices": [
-      { "id": "a", "text": "42 — subinterpreters share globals" },
-      { "id": "b", "text": "Raises or returns nothing meaningful — each subinterpreter has its own isolated namespace" },
-      { "id": "c", "text": "ModuleNotFoundError — concurrent.interpreters doesn't exist" },
+      { "id": "a", "text": "42 - subinterpreters share globals" },
+      { "id": "b", "text": "Raises or returns nothing meaningful - each subinterpreter has its own isolated namespace" },
+      { "id": "c", "text": "ModuleNotFoundError - concurrent.interpreters doesn't exist" },
       { "id": "d", "text": "Deadlocks" }
     ],
     "correctChoiceId": "b",
-    "explanation": "PEP 734 added the concurrent.interpreters module in Python 3.14. Each subinterpreter has its own __main__, builtins, and module state — the whole point is strong isolation. Passing data requires explicit channels; you can't just 'get' a variable across interpreters.",
+    "explanation": "PEP 734 added the concurrent.interpreters module in Python 3.14. Each subinterpreter has its own __main__, builtins, and module state - the whole point is strong isolation. Passing data requires explicit channels; you can't just 'get' a variable across interpreters.",
     "tags": ["subinterpreter", "concurrent-interpreters", "python-3.14"]
   },
   {
@@ -857,8 +857,8 @@
     "prompt": "What does this print?",
     "code": "print(\"hello world\".replace(\"o\", \"0\"))\nprint(\"hello world\".replace(\"o\", \"0\", 1))",
     "choices": [
-      { "id": "a", "text": "'hell0 w0rld' then 'hell0 world' — third arg is maxreplace" },
-      { "id": "b", "text": "Both 'hell0 w0rld' — third arg is ignored" },
+      { "id": "a", "text": "'hell0 w0rld' then 'hell0 world' - third arg is maxreplace" },
+      { "id": "b", "text": "Both 'hell0 w0rld' - third arg is ignored" },
       { "id": "c", "text": "TypeError on the second call" },
       { "id": "d", "text": "'hello world' then 'hell0 world'" }
     ],
@@ -874,8 +874,8 @@
     "prompt": "What does this print?",
     "code": "d1 = {\"a\": 1, \"b\": 2}\nd2 = {\"b\": 20, \"c\": 30}\nmerged = d1 | d2\nprint(merged)",
     "choices": [
-      { "id": "a", "text": "{'a': 1, 'b': 20, 'c': 30} — rightmost value wins on conflict" },
-      { "id": "b", "text": "{'a': 1, 'b': 2, 'c': 30} — leftmost value wins" },
+      { "id": "a", "text": "{'a': 1, 'b': 20, 'c': 30} - rightmost value wins on conflict" },
+      { "id": "b", "text": "{'a': 1, 'b': 2, 'c': 30} - leftmost value wins" },
       { "id": "c", "text": "TypeError: | not supported between dicts" },
       { "id": "d", "text": "{'a': 1, 'b': [2, 20], 'c': 30}" }
     ],

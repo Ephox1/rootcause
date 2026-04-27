@@ -57,7 +57,7 @@ export function SettingsScreen() {
           minHeight: 0,
         }}
       >
-        {/* LEFT — controls column */}
+        {/* LEFT - controls column */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
           <ControlPanel label="THEME">
             <div style={{ display: 'flex', gap: 10 }}>
@@ -165,7 +165,7 @@ export function SettingsScreen() {
           </ControlPanel>
         </div>
 
-        {/* RIGHT — theme previews */}
+        {/* RIGHT - theme previews */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16, minHeight: 0 }}>
           <ThemePreviewCard
             label="DARK MODE"
@@ -182,7 +182,7 @@ export function SettingsScreen() {
         </div>
       </div>
 
-      {/* BOTTOM — reset row */}
+      {/* BOTTOM - reset row */}
       <div
         style={{
           display: 'flex',
