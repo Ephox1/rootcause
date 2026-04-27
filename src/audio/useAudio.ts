@@ -13,14 +13,7 @@ const EXTERNAL_TRACKS: Record<string, string> = {
   bughunt: '/audio/music-bughunt.mp3',
   typerace: '/audio/music-typerace.mp3',
 };
-import {
-  sfxBugCrawl,
-  sfxBugScatter,
-  sfxBugSquash,
-  sfxRustle,
-  sfxStreak5,
-  sfxStreak15,
-} from './sfx';
+import { sfxBugCrawl, sfxBugScatter, sfxBugSquash, sfxStreak5, sfxStreak15 } from './sfx';
 
 /**
  * Mounts once at the app root. Handles:
@@ -40,13 +33,13 @@ export function useAudio(): void {
   const flashType = useGameStore((s) => s.flashType);
   const streak = useGameStore((s) => s.streak);
   const visualStage = useGameStore((s) => s.visualStage);
-  const difficulty = useGameStore((s) => s.difficulty);
 
   const unlockedRef = useRef(false);
   const lastFlashRef = useRef<number | null>(null);
   const lastFlashTypeRef = useRef<'correct' | 'wrong' | null>(null);
   const lastStreakRef = useRef(streak);
   const lastVisualStageRef = useRef(visualStage);
+  const leafFallIdxRef = useRef(0);
   const currentTrackRef = useRef<string | null>(null);
   const typeRaceTrackRef = useRef<string | null>(null);
 
@@ -167,12 +160,18 @@ export function useAudio(): void {
     } else if (flashType === 'wrong') {
       // Real-recording SFX as the primary "wrong" sting
       playSoundFile('/audio/sfx-wrong.mp3', sfxVolume);
-      // Rustling leaves — intensity matches the visual leaf-fall count
-      sfxRustle(difficulty === 'easy' ? 'light' : difficulty === 'medium' ? 'medium' : 'heavy');
+      // Real leaf-fall recording — alternate between the two variants
+      // each wrong answer so it doesn't feel repetitive
+      const leafSrc =
+        leafFallIdxRef.current % 2 === 0
+          ? '/audio/sfx-leaf-fall-1.mp3'
+          : '/audio/sfx-leaf-fall-2.mp3';
+      leafFallIdxRef.current += 1;
+      playSoundFile(leafSrc, sfxVolume);
       // A bug skitters up onto the trunk ~500ms later as the leaves settle
       window.setTimeout(() => sfxBugCrawl(), 500);
     }
-  }, [flashKey, flashType, sfx, sfxVolume, difficulty]);
+  }, [flashKey, flashType, sfx, sfxVolume]);
 
   // Streak milestone chimes — only one fires per correct answer.
   // Priority order (highest → lowest):
