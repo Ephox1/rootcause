@@ -1,6 +1,6 @@
 # Root Cause
 
-**[▶ Play it live at ephox1.github.io/rootcause](https://ephox1.github.io/rootcause/)**
+**[▶ Play it live at ephox1.github.io/RootCause](https://ephox1.github.io/RootCause/)**
 
 ![Root Cause title screen](docs/screenshots/title-night.png)
 
