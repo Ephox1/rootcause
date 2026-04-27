@@ -2,25 +2,23 @@ import { useEffect, useRef, useState } from 'react';
 import { useGameStore } from '../store/useGameStore';
 import { engine } from './ChiptuneEngine';
 import { musicPlayer, playSoundFile } from './musicPlayer';
-import { sequencer } from './Sequencer';
-import { BUGHUNT_TRACK_IDS, TRACKS, TYPERACE_TRACK_IDS, pickRandom } from './tracks';
+import { sfxBugCrawl, sfxBugScatter, sfxBugSquash } from './sfx';
 
-// External MP3 tracks (full-fidelity, looping) — keyed by ID. The route
-// → external map below decides when to swap from the chiptune sequencer
-// to the real audio file.
-const EXTERNAL_TRACKS: Record<string, string> = {
+// Per-route looping music. Title/settings/stats share the title track;
+// bughunt and typerace get their own; endrun mirrors whichever mode just
+// finished so the music doesn't switch on the summary screen.
+const EXTERNAL_TRACKS = {
   title: '/audio/music-title.mp3',
   bughunt: '/audio/music-bughunt.mp3',
   typerace: '/audio/music-typerace.mp3',
-};
-import { sfxBugCrawl, sfxBugScatter, sfxBugSquash } from './sfx';
+} as const;
 
 /**
  * Mounts once at the app root. Handles:
  *   - First-user-interaction gate for Web Audio autoplay policy
  *   - Volume + mute tracking from the Zustand store
- *   - Picking tracks per route (title / bughunt / typerace)
- *   - Firing SFX on flashKey / streak milestone changes
+ *   - Picking tracks per route
+ *   - Firing SFX on flashKey / streak milestone / visualStage transitions
  */
 export function useAudio(): void {
   const route = useGameStore((s) => s.route);
@@ -42,11 +40,10 @@ export function useAudio(): void {
   const lastVisualStageRef = useRef(visualStage);
   const leafFallIdxRef = useRef(0);
   const currentTrackRef = useRef<string | null>(null);
-  const typeRaceTrackRef = useRef<string | null>(null);
 
   // First-user-interaction unlock (required by all browsers for Web Audio).
-  // Flipping the unlocked state triggers the route useEffect below to run
-  // updateTrack with the LATEST route, instead of using a stale closure.
+  // Flipping `unlocked` triggers the route effect below to start the right
+  // track using fresh state instead of a stale closure.
   useEffect(() => {
     if (unlockedRef.current) return;
     const unlock = async () => {
@@ -65,77 +62,41 @@ export function useAudio(): void {
     };
   }, []);
 
-  // Route → track mapping. Recomputed whenever route flips.
-  const updateTrack = () => {
+  // Pick the right MP3 per route and ask musicPlayer to play it. Music off
+  // stops everything; the single-element musicPlayer guarantees only one
+  // track is ever audible.
+  useEffect(() => {
     if (!unlockedRef.current) return;
+
     if (!music) {
-      sequencer.stop();
       musicPlayer.stop();
       currentTrackRef.current = null;
       return;
     }
 
-    // Title / settings / stats use the external title MP3.
-    // Bug Hunt and the post-run summary share the bug-hunt MP3.
-    // Type Race still uses the chiptune sequencer (until you drop in an MP3).
-    let externalSrc: string | null = null;
+    let src: string | null = null;
     if (route === 'title' || route === 'settings' || route === 'stats') {
-      externalSrc = EXTERNAL_TRACKS.title;
+      src = EXTERNAL_TRACKS.title;
     } else if (route === 'bughunt') {
-      externalSrc = EXTERNAL_TRACKS.bughunt ?? null;
+      src = EXTERNAL_TRACKS.bughunt;
     } else if (route === 'typerace') {
-      externalSrc = EXTERNAL_TRACKS.typerace ?? null;
+      src = EXTERNAL_TRACKS.typerace;
     } else if (route === 'endrun') {
-      // Stay on the track that matches the mode the player just finished
-      // so the music doesn't jarringly switch when they hit the summary.
-      externalSrc =
-        endRunMode === 'typerace'
-          ? EXTERNAL_TRACKS.typerace ?? null
-          : EXTERNAL_TRACKS.bughunt ?? null;
+      src = endRunMode === 'typerace' ? EXTERNAL_TRACKS.typerace : EXTERNAL_TRACKS.bughunt;
     }
 
-    if (externalSrc) {
-      sequencer.stop();
-      if (currentTrackRef.current !== `mp3:${externalSrc}`) {
-        musicPlayer.play(externalSrc, musicVolume);
-        currentTrackRef.current = `mp3:${externalSrc}`;
+    if (src) {
+      if (currentTrackRef.current !== `mp3:${src}`) {
+        musicPlayer.play(src, musicVolume);
+        currentTrackRef.current = `mp3:${src}`;
       }
-      return;
-    }
-
-    // Leaving the MP3 routes — kill it before the sequencer takes over.
-    musicPlayer.stop();
-
-    let trackId: string | null = null;
-    if (route === 'bughunt' || route === 'endrun') {
-      trackId = pickRandom(BUGHUNT_TRACK_IDS);
-    } else if (route === 'typerace') {
-      if (!typeRaceTrackRef.current) {
-        typeRaceTrackRef.current = pickRandom(TYPERACE_TRACK_IDS);
-      }
-      trackId = typeRaceTrackRef.current;
-    }
-    if (route !== 'typerace') typeRaceTrackRef.current = null;
-
-    if (trackId && currentTrackRef.current !== trackId) {
-      sequencer.play(TRACKS[trackId]);
-      currentTrackRef.current = trackId;
-    } else if (!trackId) {
-      sequencer.stop();
+    } else {
+      musicPlayer.stop();
       currentTrackRef.current = null;
     }
-  };
+  }, [route, music, endRunMode, unlocked, musicVolume]);
 
-  // Swap track on route / music toggle / endRunMode change. `unlocked` is
-  // also a dep so the first updateTrack call after the autoplay gate uses
-  // the current route, not whatever it was at first render.
-  useEffect(() => {
-    updateTrack();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [route, music, endRunMode, unlocked]);
-
-  // Track music volume and mute (covers both the chiptune engine and
-  // the external MP3 player so they stay in sync).
+  // Volume + mute (one slider drives both music and synth-SFX channels).
   useEffect(() => {
     engine.setVolume(musicVolume);
     engine.setMuted(!music);
@@ -143,7 +104,7 @@ export function useAudio(): void {
     musicPlayer.setMuted(!music);
   }, [musicVolume, music]);
 
-  // SFX triggers on flashKey change
+  // SFX on flash transitions (correct/wrong answer).
   useEffect(() => {
     if (!sfx || !unlockedRef.current) return;
     if (flashKey === null || flashKey === lastFlashRef.current) return;
@@ -152,33 +113,26 @@ export function useAudio(): void {
     lastFlashTypeRef.current = flashType;
 
     if (flashType === 'correct') {
-      // Real-recording SFX as the primary "correct" sting
       playSoundFile('/audio/sfx-correct.mp3', sfxVolume);
-      // Bugs scattering off the code panel, layered a beat after the sting
       window.setTimeout(() => sfxBugScatter(), 80);
-      // If there was a stuck bug from the previous wrong answer, squash it
+      // Squash any stuck bug from the previous wrong answer.
       if (previousFlash === 'wrong') {
         window.setTimeout(() => sfxBugSquash(), 180);
       }
     } else if (flashType === 'wrong') {
-      // Real-recording SFX as the primary "wrong" sting
       playSoundFile('/audio/sfx-wrong.mp3', sfxVolume);
-      // Real leaf-fall recording — alternate between the two variants
-      // each wrong answer so it doesn't feel repetitive
+      // Alternate between two leaf-fall takes so it stays varied.
       const leafSrc =
         leafFallIdxRef.current % 2 === 0
           ? '/audio/sfx-leaf-fall-1.mp3'
           : '/audio/sfx-leaf-fall-2.mp3';
       leafFallIdxRef.current += 1;
       playSoundFile(leafSrc, sfxVolume);
-      // A bug skitters up onto the trunk ~500ms later as the leaves settle
       window.setTimeout(() => sfxBugCrawl(), 500);
     }
   }, [flashKey, flashType, sfx, sfxVolume]);
 
-  // Streak milestone chimes — only one fires per correct answer.
-  // Priority order (highest → lowest):
-  //   15+ big celebratory MP3 → 5+ celebratory MP3 → 4-streak MP3
+  // Streak milestone chimes — one per streak crossing.
   useEffect(() => {
     if (!sfx || !unlockedRef.current) return;
     const prev = lastStreakRef.current;
@@ -189,9 +143,8 @@ export function useAudio(): void {
     else if (streak === 4 && prev < 4) playSoundFile('/audio/sfx-streak4.mp3', sfxVolume);
   }, [streak, sfx, sfxVolume]);
 
-  // Tree growth — plays whenever visualStage advances. The chime now
-  // tracks the actual visible tree-stage transition rather than a
-  // heuristic "every 3 correct" rule, so the audio matches the art.
+  // Tree growth chime fires whenever visualStage advances, so audio tracks
+  // the actual visible tree-stage transition.
   useEffect(() => {
     if (!sfx || !unlockedRef.current) return;
     const prev = lastVisualStageRef.current;
