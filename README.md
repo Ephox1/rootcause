@@ -1,5 +1,7 @@
 # Root Cause
 
+**[▶ Play it live at ephox1.github.io/rootcause](https://ephox1.github.io/rootcause/)**
+
 A browser-based debugging and typing-practice game for developers.
 Spot the bug, race through real code, grow your tree.
 
