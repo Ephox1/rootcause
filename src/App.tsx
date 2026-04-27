@@ -30,10 +30,12 @@ export function App() {
       {route === 'settings' && <SettingsScreen />}
       {route === 'stats' && <StatsScreen />}
 
-      <FloatingThemeToggle
-        theme={theme}
-        onToggle={() => updateSettings({ theme: theme === 'dark' ? 'light' : 'dark' })}
-      />
+      {route !== 'title' && (
+        <FloatingThemeToggle
+          theme={theme}
+          onToggle={() => updateSettings({ theme: theme === 'dark' ? 'light' : 'dark' })}
+        />
+      )}
 
       {crt && <div aria-hidden className="crt-overlay" />}
     </div>

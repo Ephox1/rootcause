@@ -31,13 +31,12 @@ export function GameHUD({ score, streak, right, subtitle, lastDelta, flashKey }:
               key={flashKey}
               style={{
                 position: 'absolute',
-                left: '100%',
-                top: '-8px',
-                marginLeft: 8,
+                left: '50%',
+                top: '-14px',
                 color: lastDelta > 0 ? 'var(--success)' : 'var(--danger)',
                 fontFamily: '"Press Start 2P", monospace',
                 fontSize: 10,
-                animation: 'rc-slideup 1s ease-out forwards',
+                animation: 'rc-scorefloat 1.2s ease-out forwards',
                 pointerEvents: 'none',
                 whiteSpace: 'nowrap',
               }}

@@ -143,6 +143,24 @@ button:focus:not(:focus-visible) {
   to { transform: translateY(0); opacity: 1; }
 }
 
+@keyframes rc-fadein {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes rc-wrongchar {
+  0% { transform: translate(-50%, 8px) scale(0.85); opacity: 0; }
+  20% { transform: translate(-50%, 0) scale(1.15); opacity: 1; }
+  60% { transform: translate(-50%, -8px) scale(1); opacity: 1; }
+  100% { transform: translate(-50%, -28px) scale(1); opacity: 0; }
+}
+
+@keyframes rc-scorefloat {
+  0% { transform: translate(-50%, 0); opacity: 0; }
+  15% { transform: translate(-50%, 0); opacity: 1; }
+  100% { transform: translate(-50%, -32px); opacity: 0; }
+}
+
 @keyframes rc-cursor {
   0%, 50% { opacity: 1; }
   51%, 100% { opacity: 0; }

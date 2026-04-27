@@ -1,6 +1,7 @@
-import type { ReactNode } from 'react';
+import { useState, type ReactNode } from 'react';
 import { SectionTag } from '../components/SectionTag';
 import { BackIcon, InfoIcon, MoonIcon, MusicIcon, SpeakerIcon, SunIcon } from '../components/icons';
+import { PixelButton } from '../components/PixelButton';
 import { useGameStore } from '../store/useGameStore';
 import { Scene } from '../scene/Scene';
 import type { Category, Language, Theme } from '../types';
@@ -8,6 +9,7 @@ import type { Category, Language, Theme } from '../types';
 export function SettingsScreen() {
   const state = useGameStore();
   const update = state.updateSettings;
+  const [confirmReset, setConfirmReset] = useState(false);
 
   return (
     <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', background: 'var(--bg)' }}>
@@ -120,6 +122,29 @@ export function SettingsScreen() {
             />
           </ControlPanel>
 
+          <ControlPanel label="DIFFICULTY">
+            <div style={{ display: 'flex', gap: 6 }}>
+              <DifficultyChip
+                label="EASY"
+                color="var(--success)"
+                active={state.difficulty === 'easy'}
+                onClick={() => update({ difficulty: 'easy' })}
+              />
+              <DifficultyChip
+                label="MEDIUM"
+                color="var(--accent)"
+                active={state.difficulty === 'medium'}
+                onClick={() => update({ difficulty: 'medium' })}
+              />
+              <DifficultyChip
+                label="HARD"
+                color="var(--danger)"
+                active={state.difficulty === 'hard'}
+                onClick={() => update({ difficulty: 'hard' })}
+              />
+            </div>
+          </ControlPanel>
+
           <ControlPanel label="CATEGORY">
             <Segmented<Category>
               value={state.category}
@@ -157,46 +182,16 @@ export function SettingsScreen() {
         </div>
       </div>
 
-      {/* BOTTOM — difficulty row */}
+      {/* BOTTOM — reset row */}
       <div
         style={{
           display: 'flex',
           alignItems: 'center',
-          gap: 14,
           padding: '14px 24px',
           borderTop: '2px solid var(--border)',
           background: 'var(--bg-panel)',
         }}
       >
-        <div
-          style={{
-            fontFamily: '"Press Start 2P", monospace',
-            fontSize: 11,
-            color: 'var(--text)',
-            letterSpacing: '0.12em',
-            marginRight: 8,
-          }}
-        >
-          DIFFICULTY
-        </div>
-        <DifficultyChip
-          label="EASY"
-          color="var(--success)"
-          active={state.difficulty === 'easy'}
-          onClick={() => update({ difficulty: 'easy' })}
-        />
-        <DifficultyChip
-          label="MEDIUM"
-          color="var(--accent)"
-          active={state.difficulty === 'medium'}
-          onClick={() => update({ difficulty: 'medium' })}
-        />
-        <DifficultyChip
-          label="HARD"
-          color="var(--danger)"
-          active={state.difficulty === 'hard'}
-          onClick={() => update({ difficulty: 'hard' })}
-        />
         <div style={{ marginLeft: 'auto' }}>
           <button
             style={{
@@ -213,11 +208,102 @@ export function SettingsScreen() {
               boxShadow: '3px 3px 0 rgba(0,0,0,.4)',
               cursor: 'pointer',
             }}
-            onClick={() => state.resetProgress()}
+            onClick={() => setConfirmReset(true)}
           >
             <InfoIcon size={12} />
             RESET
           </button>
+        </div>
+      </div>
+
+      {confirmReset && (
+        <ResetConfirmModal
+          onConfirm={() => {
+            state.resetProgress();
+            setConfirmReset(false);
+          }}
+          onCancel={() => setConfirmReset(false)}
+        />
+      )}
+    </div>
+  );
+}
+
+interface ResetConfirmModalProps {
+  onConfirm: () => void;
+  onCancel: () => void;
+}
+
+function ResetConfirmModal({ onConfirm, onCancel }: ResetConfirmModalProps) {
+  return (
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-label="Confirm reset"
+      style={{
+        position: 'fixed',
+        inset: 0,
+        display: 'flex',
+        alignItems: 'flex-start',
+        justifyContent: 'center',
+        padding: '8% 20px 20px',
+        background: 'rgba(0, 0, 0, 0.6)',
+        zIndex: 200,
+        animation: 'rc-fadein 200ms ease-out',
+      }}
+      onClick={(e) => {
+        // Click outside the inner card cancels.
+        if (e.target === e.currentTarget) onCancel();
+      }}
+    >
+      <div
+        style={{
+          width: '100%',
+          maxWidth: 480,
+          background: 'var(--bg-panel)',
+          border: '3px solid var(--danger)',
+          boxShadow: '6px 6px 0 rgba(0,0,0,.5)',
+          padding: '22px 24px',
+        }}
+      >
+        <h3
+          style={{
+            margin: 0,
+            fontFamily: '"Press Start 2P", monospace',
+            fontSize: 14,
+            color: 'var(--danger)',
+            letterSpacing: '0.1em',
+            marginBottom: 12,
+          }}
+        >
+          RESET PROGRESS?
+        </h3>
+        <p
+          style={{
+            margin: '0 0 18px',
+            fontFamily: 'Inter, sans-serif',
+            fontSize: 14,
+            color: 'var(--text)',
+            lineHeight: 1.55,
+          }}
+        >
+          This wipes your score, best streak, level, XP, and lifetime stats.
+          Settings (theme, language, volume, etc.) stay put. This cannot be
+          undone.
+        </p>
+        <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end' }}>
+          <PixelButton onClick={onCancel} fullWidth={false} align="center" style={{ minWidth: 120 }}>
+            NO
+          </PixelButton>
+          <PixelButton
+            variant="danger"
+            onClick={onConfirm}
+            fullWidth={false}
+            align="center"
+            style={{ minWidth: 120 }}
+          >
+            YES
+          </PixelButton>
         </div>
       </div>
     </div>
@@ -562,15 +648,16 @@ function DifficultyChip({ label, color, active, onClick }: DifficultyChipProps) 
     <button
       onClick={onClick}
       style={{
-        padding: '12px 22px',
+        flex: 1,
+        padding: '8px 6px',
         background: active ? color : 'var(--bg-elevated)',
         border: `2px solid ${active ? color : 'var(--border)'}`,
         color: active ? '#fff' : 'var(--text)',
         fontFamily: '"Press Start 2P", monospace',
-        fontSize: 10,
-        letterSpacing: '0.12em',
+        fontSize: 9,
+        letterSpacing: '0.08em',
         cursor: 'pointer',
-        boxShadow: active ? `0 0 0 2px ${color}44, 3px 3px 0 rgba(0,0,0,.4)` : '3px 3px 0 rgba(0,0,0,.4)',
+        boxShadow: active ? `0 0 0 2px ${color}44, 2px 2px 0 rgba(0,0,0,.4)` : '2px 2px 0 rgba(0,0,0,.35)',
       }}
     >
       {label}

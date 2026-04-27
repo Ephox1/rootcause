@@ -17,7 +17,10 @@ import type {
 } from '../types';
 import { pickQuestions, pickSnippets } from '../content';
 
-const BUG_HUNT_RUN_LENGTH = 5;
+// Run length matches the difficulty's tree-growth threshold so a perfect run
+// always reaches full bloom at every difficulty — harder just means a longer
+// challenge with the same triumphant payoff.
+const BUG_HUNT_RUN_LENGTH: Record<Difficulty, number> = { easy: 5, medium: 10, hard: 15 };
 const TYPE_RACE_RUN_LENGTH = 5;
 
 const DIFFICULTY_THRESHOLDS: Record<Difficulty, number> = { easy: 5, medium: 10, hard: 15 };
@@ -44,10 +47,10 @@ function clamp(value: number, min: number, max: number): number {
   return Math.max(min, Math.min(max, value));
 }
 
-function variantForStreak(streak: number): TreeVariant {
-  if (streak >= 50) return 'winter';
-  if (streak >= 25) return 'autumn';
-  if (streak >= 10) return 'blossom';
+function variantForStreak(_streak: number): TreeVariant {
+  // Seasonal variants are disabled — the green-tree progression now covers
+  // all 15 growth stages via tree-green-{0..14}.png (final stage is the
+  // apple tree). Restore the streak thresholds here when seasonal art lands.
   return 'green';
 }
 
@@ -230,8 +233,8 @@ export const useGameStore = create<GameStore>()(
       updateSettings: (patch) => set(patch),
 
       startBugHunt: () => {
-        const { language, category } = get();
-        const questions = pickQuestions({ language, category }, BUG_HUNT_RUN_LENGTH);
+        const { language, category, difficulty } = get();
+        const questions = pickQuestions({ language, category }, BUG_HUNT_RUN_LENGTH[difficulty]);
         set({
           bugHuntQuestions: questions,
           bugHuntIndex: 0,
@@ -275,7 +278,7 @@ export const useGameStore = create<GameStore>()(
         const treeProgress = correct
           ? clamp(s.treeProgress + 1, 0, threshold)
           : clamp(s.treeProgress - penalty, 0, threshold);
-        const visualStage = Math.floor((treeProgress / threshold) * 5);
+        const visualStage = Math.floor((treeProgress / threshold) * 14);
 
         set({
           answerState: correct ? 'correct' : 'wrong',
@@ -421,13 +424,9 @@ export const useGameStore = create<GameStore>()(
       }),
       merge: (persisted, current) => {
         const p = (persisted ?? {}) as Partial<GameStore>;
-        // Music defaults off as of build 2; force-override any older persisted
-        // state so existing users don't get music until they opt in.
-        const audioOverride = { music: false };
         return {
           ...current,
           ...p,
-          ...audioOverride,
           lifetime: p.lifetime ?? current.lifetime,
         };
       },

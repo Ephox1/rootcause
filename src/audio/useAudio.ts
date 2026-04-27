@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useGameStore } from '../store/useGameStore';
 import { engine } from './ChiptuneEngine';
 import { musicPlayer, playSoundFile } from './musicPlayer';
@@ -13,7 +13,7 @@ const EXTERNAL_TRACKS: Record<string, string> = {
   bughunt: '/audio/music-bughunt.mp3',
   typerace: '/audio/music-typerace.mp3',
 };
-import { sfxBugCrawl, sfxBugScatter, sfxBugSquash, sfxStreak5, sfxStreak15 } from './sfx';
+import { sfxBugCrawl, sfxBugScatter, sfxBugSquash } from './sfx';
 
 /**
  * Mounts once at the app root. Handles:
@@ -35,6 +35,7 @@ export function useAudio(): void {
   const visualStage = useGameStore((s) => s.visualStage);
 
   const unlockedRef = useRef(false);
+  const [unlocked, setUnlocked] = useState(false);
   const lastFlashRef = useRef<number | null>(null);
   const lastFlashTypeRef = useRef<'correct' | 'wrong' | null>(null);
   const lastStreakRef = useRef(streak);
@@ -44,13 +45,14 @@ export function useAudio(): void {
   const typeRaceTrackRef = useRef<string | null>(null);
 
   // First-user-interaction unlock (required by all browsers for Web Audio).
+  // Flipping the unlocked state triggers the route useEffect below to run
+  // updateTrack with the LATEST route, instead of using a stale closure.
   useEffect(() => {
     if (unlockedRef.current) return;
     const unlock = async () => {
       await engine.resume();
       unlockedRef.current = true;
-      // After unlock, start whatever track the current route expects.
-      updateTrack();
+      setUnlocked(true);
     };
     const events = ['pointerdown', 'keydown', 'touchstart'] as const;
     const handler = () => {
@@ -61,7 +63,6 @@ export function useAudio(): void {
     return () => {
       events.forEach((ev) => window.removeEventListener(ev, handler));
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Route → track mapping. Recomputed whenever route flips.
@@ -125,11 +126,13 @@ export function useAudio(): void {
     }
   };
 
-  // Swap track on route / music toggle / endRunMode change.
+  // Swap track on route / music toggle / endRunMode change. `unlocked` is
+  // also a dep so the first updateTrack call after the autoplay gate uses
+  // the current route, not whatever it was at first render.
   useEffect(() => {
     updateTrack();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [route, music, endRunMode]);
+  }, [route, music, endRunMode, unlocked]);
 
   // Track music volume and mute (covers both the chiptune engine and
   // the external MP3 player so they stay in sync).
@@ -175,14 +178,14 @@ export function useAudio(): void {
 
   // Streak milestone chimes — only one fires per correct answer.
   // Priority order (highest → lowest):
-  //   15+ chiptune fanfare → 5+ chiptune fanfare → 4-streak MP3
+  //   15+ big celebratory MP3 → 5+ celebratory MP3 → 4-streak MP3
   useEffect(() => {
     if (!sfx || !unlockedRef.current) return;
     const prev = lastStreakRef.current;
     lastStreakRef.current = streak;
     if (streak === prev) return;
-    if (streak >= 15 && prev < 15) sfxStreak15();
-    else if (streak >= 5 && prev < 5) sfxStreak5();
+    if (streak >= 15 && prev < 15) playSoundFile('/audio/sfx-streak15.mp3', sfxVolume);
+    else if (streak >= 5 && prev < 5) playSoundFile('/audio/sfx-streak5.mp3', sfxVolume);
     else if (streak === 4 && prev < 4) playSoundFile('/audio/sfx-streak4.mp3', sfxVolume);
   }, [streak, sfx, sfxVolume]);
 

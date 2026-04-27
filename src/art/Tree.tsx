@@ -73,9 +73,12 @@ export function Tree({ stage = 5, variant = 'green', size = 256, style }: TreePr
     '6': p.leafHi,
     '7': p.leafSpec,
   };
-  const clampedStage = Math.max(0, Math.min(TREE_STAGES.length - 1, stage));
-  const grid = TREE_STAGES[clampedStage];
-  const singlePngSrc = `/sprites/tree-${variant}-${clampedStage}.png`;
+  // Tier 1 PNGs cover stages 0..14 (15 hand-painted variations).
+  // The SVG fallback only has 6 stages, so clamp separately for the grid.
+  const stageForPng = Math.max(0, Math.min(14, stage));
+  const stageForSvg = Math.max(0, Math.min(TREE_STAGES.length - 1, stage));
+  const grid = TREE_STAGES[stageForSvg];
+  const singlePngSrc = `/sprites/tree-${variant}-${stageForPng}.png`;
 
   const svgFallback: ReactNode = (
     <svg
@@ -94,7 +97,8 @@ export function Tree({ stage = 5, variant = 'green', size = 256, style }: TreePr
   // working until pine variants are generated for those seasons.
   let sheetCell: ReactNode;
   if (variant === 'green') {
-    const cell = PINE_STAGE_CELL[clampedStage] ?? PINE_STAGE_CELL[5];
+    // Sheet only has 6 cells mapped — clamp to the SVG range here too.
+    const cell = PINE_STAGE_CELL[stageForSvg] ?? PINE_STAGE_CELL[5];
     sheetCell = (
       <SheetCell
         src="/sprites/tree-pine.png"
@@ -104,7 +108,7 @@ export function Tree({ stage = 5, variant = 'green', size = 256, style }: TreePr
         rows={4}
         size={size}
         cellAspect={256 / 384}
-        alt={`green pine tree stage ${clampedStage}`}
+        alt={`green pine tree stage ${stageForSvg}`}
         fallback={svgFallback}
         style={style}
       />
@@ -119,7 +123,7 @@ export function Tree({ stage = 5, variant = 'green', size = 256, style }: TreePr
         rows={4}
         size={size}
         cellAspect={256 / 307}
-        alt={`${variant} tree stage ${clampedStage}`}
+        alt={`${variant} tree stage ${stageForPng}`}
         fallback={svgFallback}
         style={style}
       />
@@ -131,7 +135,7 @@ export function Tree({ stage = 5, variant = 'green', size = 256, style }: TreePr
     <SpriteWithFallback
       src={singlePngSrc}
       size={size}
-      alt={`${variant} tree stage ${clampedStage}`}
+      alt={`${variant} tree stage ${stageForPng}`}
       style={style}
       fallback={sheetCell}
     />

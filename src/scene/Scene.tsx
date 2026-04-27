@@ -1,8 +1,42 @@
 import { useEffect, useState, type CSSProperties } from 'react';
 import { Tree } from '../art/Tree';
-import { Character } from '../art/Character';
+import { CharacterAnim } from '../art/CharacterAnim';
 import { Bug, Leaf } from '../art/decor';
 import type { CharacterState, Theme, TreeVariant } from '../types';
+
+// Painted backgrounds share a 16:9 aspect ratio. The stage is locked to this
+// ratio so tree/character/particle positions stay pinned to the same painted
+// spot regardless of viewport — and identical across themes.
+const STAGE_RATIO = 16 / 9;
+
+// Compute the smallest stage box (preserving aspect ratio) that fully covers
+// the viewport. The stage overflows the viewport on the long axis and is
+// clipped by the parent's overflow:hidden — same effect as object-fit:cover,
+// but applied to the whole stage so tree/character stay anchored to the
+// painted ground. Re-runs on window resize.
+function useStageSize(ratio: number): { w: number; h: number } {
+  const [size, setSize] = useState(() => computeStageSize(ratio));
+  useEffect(() => {
+    const onResize = () => setSize(computeStageSize(ratio));
+    onResize();
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
+  }, [ratio]);
+  return size;
+}
+
+function computeStageSize(ratio: number): { w: number; h: number } {
+  if (typeof window === 'undefined') return { w: 0, h: 0 };
+  const vw = window.innerWidth;
+  const vh = window.innerHeight;
+  const vpRatio = vw / vh;
+  if (vpRatio > ratio) {
+    // Viewport wider than stage ratio: width fills, height overflows.
+    return { w: vw, h: vw / ratio };
+  }
+  // Viewport taller than stage ratio: height fills, width overflows.
+  return { w: vh * ratio, h: vh };
+}
 
 interface SceneProps {
   stage?: number;
@@ -18,6 +52,8 @@ interface SceneProps {
   showCharacter?: boolean;
   showTree?: boolean;
   compact?: boolean;
+  /** Pass-through to CharacterAnim — intermittent coffee-sip animation. */
+  drinkIntervalMs?: number;
 }
 
 interface LeafParticle {
@@ -71,6 +107,7 @@ export function Scene({
   showCharacter = true,
   showTree = false,
   compact = false,
+  drinkIntervalMs,
 }: SceneProps): JSX.Element {
   const [leaves, setLeaves] = useState<LeafParticle[]>([]);
   const [sparkles, setSparkles] = useState<Sparkle[]>([]);
@@ -143,11 +180,12 @@ export function Scene({
 
   const isDark = theme === 'dark';
   const bgSrc = isDark ? '/sprites/bg-night.png' : '/sprites/bg-day.png';
+  const { w: stageW, h: stageH } = useStageSize(STAGE_RATIO);
 
   // Tree displays in front of background, slightly right of center.
-  const treeSize = compact ? 200 : focusTree ? 300 : 260;
+  const treeSize = compact ? 360 : focusTree ? 620 : 540;
   // Character anchored bottom-LEFT to match the painted desk position.
-  const charSize = compact ? 130 : 180;
+  const charSize = compact ? 550 : 900;
 
   return (
     <div
@@ -156,25 +194,36 @@ export function Scene({
         inset: 0,
         overflow: 'hidden',
         backgroundColor: isDark ? '#02040a' : '#7dc4e8',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
       }}
     >
-      {/* Painted background, full-bleed */}
-      <img
-        src={bgSrc}
-        alt=""
-        aria-hidden
+      <div
         style={{
-          position: 'absolute',
-          inset: 0,
-          width: '100%',
-          height: '100%',
-          objectFit: 'cover',
-          objectPosition: 'center',
-          imageRendering: 'pixelated',
-          userSelect: 'none',
-          pointerEvents: 'none',
+          position: 'relative',
+          width: stageW,
+          height: stageH,
+          flexShrink: 0,
         }}
-      />
+      >
+        {/* Painted background fills the stage exactly */}
+        <img
+          src={bgSrc}
+          alt=""
+          aria-hidden
+          draggable={false}
+          style={{
+            position: 'absolute',
+            inset: 0,
+            width: '100%',
+            height: '100%',
+            display: 'block',
+            imageRendering: 'pixelated',
+            userSelect: 'none',
+            pointerEvents: 'none',
+          }}
+        />
 
       {/* Subtle vignette for foreground UI legibility */}
       <div
@@ -217,8 +266,8 @@ export function Scene({
         <div
           style={{
             position: 'absolute',
-            left: focusTree ? '50%' : compact ? '50%' : '54%',
-            bottom: '8%',
+            left: focusTree ? '50%' : compact ? '46%' : '48%',
+            bottom: '18%',
             marginLeft: -treeSize / 2,
             width: treeSize,
             transition: 'left 400ms, margin-left 400ms, width 400ms',
@@ -275,20 +324,28 @@ export function Scene({
         </div>
       )}
 
-      {/* Character — anchored bottom-LEFT in front of the cabin/desk area */}
+      {/* Character — desk right edge anchored to ~45% of stage (just left of
+          the tree mound at 48%). translateX(-85%) shifts by the ratio of the
+          desk's right edge inside the source PNG, so alignment stays fixed
+          across viewports rather than drifting with stage size. */}
       {showCharacter && !focusTree && (
         <div
           style={{
             position: 'absolute',
-            left: compact ? '4%' : '6%',
-            bottom: compact ? '0' : '0',
+            left: '45%',
+            bottom: compact ? '-3%' : '-5%',
             width: charSize,
+            transform: 'translateX(-85%)',
             filter: isDark ? 'drop-shadow(0 0 18px rgba(255,140,66,.18))' : 'none',
             transition: 'width 300ms',
             pointerEvents: 'none',
           }}
         >
-          <Character state={characterState} size={charSize} />
+          <CharacterAnim
+            state={characterState}
+            size={charSize}
+            drinkIntervalMs={drinkIntervalMs}
+          />
         </div>
       )}
 
@@ -352,6 +409,7 @@ export function Scene({
           <Bug size={14} />
         </div>
       ))}
+      </div>
     </div>
   );
 }

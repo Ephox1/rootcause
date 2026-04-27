@@ -62,7 +62,7 @@ export function BugHuntScreen() {
           flashKey={state.flashKey}
           flashType={state.flashType}
           showTree
-          showCharacter={false}
+          showCharacter
         />
       </div>
 
@@ -329,12 +329,12 @@ function ExplanationModal({ correct, explanation, onContinue }: ExplanationModal
         position: 'fixed',
         inset: 0,
         display: 'flex',
-        alignItems: 'flex-end',
+        alignItems: 'flex-start',
         justifyContent: 'center',
-        padding: 20,
+        padding: '8% 20px 20px',
         background: 'rgba(0, 0, 0, 0.55)',
         zIndex: 200,
-        animation: 'rc-slideup 200ms ease-out',
+        animation: 'rc-fadein 200ms ease-out',
       }}
     >
       <div
