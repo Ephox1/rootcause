@@ -173,7 +173,9 @@ export function useAudio(): void {
     }
   }, [flashKey, flashType, sfx, sfxVolume, difficulty]);
 
-  // Streak milestone chimes
+  // Streak milestone chimes — only one fires per correct answer.
+  // Priority order (highest → lowest):
+  //   15+ chiptune fanfare → 5+ chiptune fanfare → 4-streak MP3 → tree-grow
   useEffect(() => {
     if (!sfx || !unlockedRef.current) return;
     const prev = lastStreakRef.current;
@@ -181,7 +183,8 @@ export function useAudio(): void {
     if (streak === prev) return;
     if (streak >= 15 && prev < 15) sfxStreak15();
     else if (streak >= 5 && prev < 5) sfxStreak5();
-    // Tree-grow chime every 3 correct in a row
+    else if (streak === 4 && prev < 4) playSoundFile('/audio/sfx-streak4.mp3', sfxVolume);
+    // Tree-grow chime every 3 correct in a row (covers 3, 6, 9, 12, …)
     else if (streak > 0 && streak % 3 === 0 && streak > prev) sfxTreeGrow();
-  }, [streak, sfx]);
+  }, [streak, sfx, sfxVolume]);
 }
